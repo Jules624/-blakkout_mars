@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Fond noir avec effet de bruit -->
+  <rect width="100" height="100" fill="#000" />
+  
+  <!-- Grille de circuit -->
+  <g stroke="#0f0" stroke-width="0.5" opacity="0.3">
+    <path d="M0,20 H100 M0,40 H100 M0,60 H100 M0,80 H100" />
+    <path d="M20,0 V100 M40,0 V100 M60,0 V100 M80,0 V100" />
+  </g>
+  
+  <!-- Symbole @ stylisé -->
+  <g transform="translate(50, 50) scale(0.4)">
+    <path d="M0,-60 A60,60 0 1,1 -60,0 A60,60 0 1,1 0,60 A60,60 0 1,1 60,0 A60,60 0 1,1 0,-60 Z M0,-30 A30,30 0 1,0 0,30 A30,30 0 1,0 0,-30 Z" 
+          fill="none" stroke="#0f0" stroke-width="5" />
+    <path d="M30,0 H60" stroke="#0f0" stroke-width="5" />
+  </g>
+  
+  <!-- Effet de glitch -->
+  <g transform="translate(51, 49) scale(0.4)" opacity="0.5">
+    <path d="M0,-60 A60,60 0 1,1 -60,0 A60,60 0 1,1 0,60 A60,60 0 1,1 60,0 A60,60 0 1,1 0,-60 Z M0,-30 A30,30 0 1,0 0,30 A30,30 0 1,0 0,-30 Z" 
+          fill="none" stroke="#f0f" stroke-width="5" />
+    <path d="M30,0 H60" stroke="#f0f" stroke-width="5" />
+  </g>
+  
+  <g transform="translate(49, 51) scale(0.4)" opacity="0.5">
+    <path d="M0,-60 A60,60 0 1,1 -60,0 A60,60 0 1,1 0,60 A60,60 0 1,1 60,0 A60,60 0 1,1 0,-60 Z M0,-30 A30,30 0 1,0 0,30 A30,30 0 1,0 0,-30 Z" 
+          fill="none" stroke="#0ff" stroke-width="5" />
+    <path d="M30,0 H60" stroke="#0ff" stroke-width="5" />
+  </g>
+  
+  <!-- Points de connexion -->
+  <circle cx="35" cy="25" r="1.5" fill="#0f0" />
+  <circle cx="65" cy="25" r="1.5" fill="#0f0" />
+  <circle cx="35" cy="75" r="1.5" fill="#0f0" />
+  <circle cx="65" cy="75" r="1.5" fill="#0f0" />
+  
+  <!-- Éléments de circuit -->
+  <g stroke="#0f0" stroke-width="1" fill="none">
+    <path d="M15,15 L25,15 L25,25 L35,25" />
+    <path d="M85,15 L75,15 L75,25 L65,25" />
+    <path d="M15,85 L25,85 L25,75 L35,75" />
+    <path d="M85,85 L75,85 L75,75 L65,75" />
+  </g>
+  
+  <!-- Effet de scan -->
+  <rect x="0" y="0" width="100" height="100" fill="url(#scanline)" opacity="0.1" />
+  
+  <!-- Définition des motifs -->
+  <defs>
+    <pattern id="scanline" patternUnits="userSpaceOnUse" width="100" height="4">
+      <rect x="0" y="0" width="100" height="2" fill="#fff" opacity="0.5" />
+    </pattern>
+  </defs>
+</svg>

@@ -1,0 +1,9 @@
+Ce dossier contiendra les images des membres du collectif @blakkout_mars :
+
+- founder.jpg : Image du fondateur Alex Noir (BLKKT_FOUNDER)
+- vj.jpg : Image de Marie Glitch (GLITCH_CTRL), artiste visuelle et VJ
+- dj.jpg : Image de Thomas Bass (LOWFREQ), DJ et producteur
+- dev.jpg : Image de Sarah Code (CODEBREAKER), développeuse créative
+- comm.jpg : Image de Julien Network (NETRUNNER), responsable communication
+
+Ces fichiers devront être créés et placés dans ce répertoire pour que la page du collectif puisse les charger correctement.

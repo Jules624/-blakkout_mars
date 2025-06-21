@@ -1,0 +1,10 @@
+Ce dossier contiendra les modèles 3D au format GLB/GLTF pour les produits merchandising :
+
+- tshirt.glb : Modèle 3D du t-shirt Neural Network
+- hoodie.glb : Modèle 3D du hoodie System Failure
+- cap.glb : Modèle 3D de la casquette Terminal
+- totebag.glb : Modèle 3D du tote bag Glitch
+- poster.glb : Modèle 3D du poster Blackout Edition
+- jacket.glb : Modèle 3D de la veste Tech Limited
+
+Ces fichiers devront être créés et placés dans ce répertoire pour que les composants RotatingMerch3D puissent les charger correctement.

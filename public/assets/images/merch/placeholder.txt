@@ -1,0 +1,16 @@
+Ce dossier contiendra les images des produits merchandising :
+
+- tshirt-front.jpg : Vue de face du t-shirt Neural Network
+- tshirt-back.jpg : Vue de dos du t-shirt Neural Network
+- hoodie-front.jpg : Vue de face du hoodie System Failure
+- hoodie-back.jpg : Vue de dos du hoodie System Failure
+- cap-front.jpg : Vue de face de la casquette Terminal
+- cap-side.jpg : Vue de côté de la casquette Terminal
+- totebag-front.jpg : Vue de face du tote bag Glitch
+- totebag-detail.jpg : Détail du tote bag Glitch
+- poster-light.jpg : Poster Blackout Edition en lumière normale
+- poster-dark.jpg : Poster Blackout Edition dans l'obscurité (phosphorescent)
+- jacket-front.jpg : Vue de face de la veste Tech Limited
+- jacket-back.jpg : Vue de dos de la veste Tech Limited
+
+Ces fichiers devront être créés et placés dans ce répertoire pour que les composants d'affichage des produits puissent les charger correctement.

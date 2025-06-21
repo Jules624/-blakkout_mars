@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 5.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 120 100% 50%; /* Vert hacker */
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 300 100% 50%; /* Magenta glitch */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 10.2%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 180 100% 50%; /* Cyan accent */
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 120 100% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-blakkout-background text-blakkout-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Effets spéciaux */
+@layer components {
+  /* Effet de scan ligne CRT */
+  .crt-scan-line {
+    @apply pointer-events-none fixed inset-0 h-screen w-screen overflow-hidden before:absolute before:left-0 before:top-0 before:h-[1px] before:w-full before:animate-scan-line before:bg-white/10 before:content-[""] after:absolute after:bottom-0 after:left-0 after:h-[10px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-black/80 after:content-[""];
+  }
+
+  /* Effet de bruit de fond */
+  .noise-bg {
+    @apply relative before:absolute before:inset-0 before:bg-noise before:opacity-[0.03] before:mix-blend-overlay before:content-[""];
+  }
+
+  /* Effet de glitch sur texte */
+  .text-glitch {
+    @apply relative inline-block animate-glitch text-blakkout-primary;
+    text-shadow: 0.05em 0 0 rgba(255, 0, 255, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 255, 0.75),
+      0.025em 0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+
+  /* Effet de terminal */
+  .terminal {
+    @apply rounded-md border border-blakkout-primary bg-blakkout-background p-4 font-mono text-blakkout-primary shadow-[0_0_10px_rgba(0,255,0,0.5)];
+  }
+
+  /* Effet de texte terminal typing */
+  .terminal-typing {
+    @apply overflow-hidden whitespace-nowrap border-r-2 border-blakkout-primary pr-1 font-mono text-blakkout-primary;
+    animation: terminal-typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: theme('colors.blakkout.primary') }
+  }
+
+  /* Effet de TV blackout */
+  .tv-blackout {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:animate-tv-blackout before:bg-black before:content-[""];
+  }
+
+  /* Effet de grille */
+  .grid-bg {
+    @apply relative before:absolute before:inset-0 before:bg-grid before:opacity-[0.05] before:content-[""];
+  }
+
+  /* Effet de circuit */
+  .circuit-bg {
+    @apply relative before:absolute before:inset-0 before:bg-circuit before:opacity-[0.1] before:content-[""];
+  }
+
+  /* Container 3D pour les objets rotatifs */
+  .rotating-3d-container {
+    @apply relative h-[300px] w-full;
+    perspective: 1000px;
+  }
+
+  .rotating-3d-object {
+    @apply h-full w-full transform-style-3d animate-rotate-3d;
+  }
+  
+  /* Ajout de la classe transform-style-3d */
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+
+  /* Effet de markdown cryptique */
+  .markdown-cryptic {
+    @apply font-mono text-blakkout-primary;
+  }
+
+  .markdown-cryptic code {
+    @apply rounded bg-blakkout-muted px-1 py-0.5 text-blakkout-accent;
+  }
+
+  .markdown-cryptic pre {
+    @apply my-4 rounded-md bg-blakkout-muted p-4;
+  }
+
+  /* Effet de bouton hacker */
+  .hacker-button {
+    @apply relative overflow-hidden rounded-md border border-blakkout-primary bg-transparent px-4 py-2 font-mono text-blakkout-primary transition-all duration-300 hover:bg-blakkout-primary/10 hover:shadow-[0_0_10px_rgba(0,255,0,0.5)];
+  }
+
+  /* Effet de lien cryptique */
+  .cryptic-link {
+    @apply relative font-mono text-blakkout-primary no-underline transition-all duration-300 hover:text-blakkout-accent hover:underline;
+  }
+
+  /* Effet de carte événement */
+  .event-card {
+    @apply relative overflow-hidden rounded-md border border-blakkout-primary bg-blakkout-muted p-4 transition-all duration-300 hover:shadow-[0_0_15px_rgba(0,255,0,0.5)];
+  }
+}

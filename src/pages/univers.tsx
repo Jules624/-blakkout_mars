@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import Layout from '@/components/layout/Layout';
 import MarkdownReveal from '@/components/content/MarkdownReveal';
+import { TerminalInput } from '@/components/ui/TerminalInput';
 
 import { useEasterEggs } from '@/context/EasterEggContext';
 
@@ -51,7 +52,7 @@ const enigmes = [
     difficulty: 'MOYEN',
     content: 'Trouvez le mot de passe : La somme des positions alphabétiques de M-A-R-S multipliée par 2077',
     hint: 'M=13, A=1, R=18, S=19. Calculez (13+1+18+19) × 2077',
-    solution: '106027',
+    solution: '105927',
     isLocked: true,
   },
   {
@@ -60,13 +61,13 @@ const enigmes = [
     difficulty: 'DIFFICILE',
     content: 'Le code est caché dans le nom des trois premiers événements. Prenez la première lettre de chaque mot, inversez l\'ordre et remplacez les voyelles par leur position dans l\'alphabet.',
     hint: 'Les trois premiers événements étaient: NEURAL NETWORK, SYSTEM FAILURE, TERMINAL ACCESS',
-    solution: 'TSN',
+    solution: '1TFSNN',
     isLocked: true,
   },
 ];
 
 export default function Univers() {
-  const [activeTab, setActiveTab] = useState<'lore' | 'enigmes'>('lore');
+  const [activeTab, setActiveTab] = useState<string>('lore');
   const [solvedEnigmes, setSolvedEnigmes] = useState<string[]>([]);
   const { activateEasterEgg } = useEasterEggs();
   
@@ -76,13 +77,34 @@ export default function Univers() {
   // Résoudre une énigme
   const solveEnigme = (id: string) => {
     if (!isEnigmeSolved(id)) {
-      setSolvedEnigmes([...solvedEnigmes, id]);
+      const newSolvedEnigmes = [...solvedEnigmes, id];
+      setSolvedEnigmes(newSolvedEnigmes);
       
-      // Activer un easter egg si toutes les énigmes sont résolues
-      if (solvedEnigmes.length + 1 === enigmes.length) {
-        activateEasterEgg('allEnigmasSolved');
+      // Déclencher un easter egg selon l'énigme résolue
+      const easterEggMapping: Record<string, string> = {
+        'neural-cipher': 'hidden', // CHIFFRE NEURAL -> hidden easter egg
+        'system-puzzle': 'glitch', // PUZZLE SYSTÈME -> glitch easter egg  
+        'terminal-access': 'matrix'  // ACCÈS TERMINAL -> matrix easter egg
+      };
+      
+      // Activer l'easter egg correspondant à l'énigme résolue
+      if (easterEggMapping[id]) {
+        // Utiliser triggerEasterEgg avec le nom direct de l'easter egg
+        activateEasterEgg(`activate_${easterEggMapping[id]}`);
+      }
+      
+      // Activer un easter egg spécial si toutes les énigmes sont résolues
+      if (newSolvedEnigmes.length === enigmes.length) {
+        setTimeout(() => {
+          activateEasterEgg('activate_consoleAccess');
+        }, 1000);
       }
     }
+  };
+
+  const handleTabClick = (tab: string) => {
+    console.log('Tab clicked:', tab);
+    setActiveTab(tab);
   };
   
   return (
@@ -109,22 +131,26 @@ export default function Univers() {
           <div className="mb-8 flex justify-center">
             <div className="flex rounded-lg bg-gray-800 p-1">
               <button
-                onClick={() => setActiveTab('lore')}
-                className={`px-6 py-3 rounded-md font-medium transition-all ${
+                type="button"
+                onClick={() => handleTabClick('lore')}
+                className={`px-6 py-3 rounded-md font-medium transition-all cursor-pointer ${
                   activeTab === 'lore'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
                 }`}
+                style={{ pointerEvents: 'auto', zIndex: 10 }}
               >
                 LORE
               </button>
               <button
-                onClick={() => setActiveTab('enigmes')}
-                className={`px-6 py-3 rounded-md font-medium transition-all ${
+                type="button"
+                onClick={() => handleTabClick('enigmes')}
+                className={`px-6 py-3 rounded-md font-medium transition-all cursor-pointer ${
                   activeTab === 'enigmes'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-700'
                 }`}
+                style={{ pointerEvents: 'auto', zIndex: 10 }}
               >
                 ÉNIGMES
               </button>
@@ -211,44 +237,14 @@ export default function Univers() {
                                 <p className="mt-2 text-gray-400">{enigme.hint}</p>
                               </details>
                               
-                              <div className="flex space-x-2">
-                                <input
-                                  type="text"
-                                  placeholder="Votre réponse..."
-                                  className="flex-1 rounded bg-gray-800 px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  onKeyPress={(e) => {
-                                    if (e.key === 'Enter') {
-                                      const input = e.target as HTMLInputElement;
-                                      if (input.value.toUpperCase() === enigme.solution) {
-                                        solveEnigme(enigme.id);
-                                        input.value = '';
-                                      } else {
-                                        input.classList.add('ring-2', 'ring-red-500');
-                                        setTimeout(() => {
-                                          input.classList.remove('ring-2', 'ring-red-500');
-                                        }, 1000);
-                                      }
-                                    }
-                                  }}
-                                />
-                                <button
-                                  onClick={(e) => {
-                                    const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
-                                    if (input.value.toUpperCase() === enigme.solution) {
-                                      solveEnigme(enigme.id);
-                                      input.value = '';
-                                    } else {
-                                      input.classList.add('ring-2', 'ring-red-500');
-                                      setTimeout(() => {
-                                        input.classList.remove('ring-2', 'ring-red-500');
-                                      }, 1000);
-                                    }
-                                  }}
-                                  className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                >
-                                  VALIDER
-                                </button>
-                              </div>
+                              <TerminalInput
+                                placeholder="Votre réponse..."
+                                expectedSolution={enigme.solution}
+                                onValidSubmit={() => solveEnigme(enigme.id)}
+                                ariaLabel={`Solution pour l'énigme: ${enigme.title}`}
+                                errorMessage="Réponse incorrecte, essayez encore"
+                                successMessage="Bravo ! Énigme résolue"
+                              />
                             </div>
                           )}
                         </div>

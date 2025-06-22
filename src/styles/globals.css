@@ -50,7 +50,7 @@
 @layer components {
   /* Effet de scan ligne CRT - optimisé */
   .crt-scan-line {
-    @apply pointer-events-none fixed inset-0 h-screen w-screen overflow-hidden before:absolute before:left-0 before:top-0 before:h-[1px] before:w-full before:bg-white/10 before:content-[""] after:absolute after:bottom-0 after:left-0 after:h-[10px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-black/80 after:content-[""];
+    @apply pointer-events-none fixed inset-0 h-screen w-screen overflow-hidden before:absolute before:left-0 before:top-0 before:h-[1px] before:w-full before:bg-white/10 before:content-[""] after:absolute after:bottom-0 after:left-0 after:h-[10px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-black/80 after:content-[""] z-[-1];
   }
   
   /* Animation scan-line uniquement au hover */

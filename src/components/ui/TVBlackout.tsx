@@ -55,6 +55,7 @@ export default function TVBlackout({
     <AnimatePresence>
       {visible && (
         <motion.div
+          data-testid="tv-blackout"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

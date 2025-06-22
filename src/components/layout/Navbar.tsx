@@ -40,6 +40,7 @@ export default function Navbar({ transparent = false }: NavbarProps) {
     { href: '/collectif', label: 'COLLECTIF' },
     { href: '/evenements', label: 'ÉVÉNEMENTS' },
     { href: '/univers', label: 'UNIVERS' },
+    { href: '/rewards', label: '🏆 RÉCOMPENSES' },
     { href: '/merch', label: 'MERCH' },
     { href: '/galerie', label: 'GALERIE' },
     { href: '/recrutement', label: 'RECRUTEMENT' },

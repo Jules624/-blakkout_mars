@@ -7,6 +7,8 @@ import '@/styles/globals.css';
 import SEO_CONFIG from '@/lib/seo-config';
 import { EasterEggProvider } from '@/context/EasterEggContext';
 
+import { TerminalButton } from '@/components/ui/TerminalButton';
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -16,26 +18,16 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className="noise-bg min-h-screen">
             <div className="crt-scan-line" />
             <Component {...pageProps} />
-            <Toaster 
-              position="bottom-right"
+    
+            <TerminalButton />
+            <Toaster
+              position="top-right"
               toastOptions={{
+                duration: 4000,
                 style: {
-                  background: '#1a1a1a',
-                  color: '#00ff00',
-                  border: '1px solid #00ff00',
-                  fontFamily: '"Space Mono", monospace',
-                },
-                success: {
-                  iconTheme: {
-                    primary: '#00ff00',
-                    secondary: '#000',
-                  },
-                },
-                error: {
-                  iconTheme: {
-                    primary: '#ff0000',
-                    secondary: '#000',
-                  },
+                  background: '#0a0a0a',
+                  color: '#fff',
+                  border: '1px solid #333',
                 },
               }}
             />

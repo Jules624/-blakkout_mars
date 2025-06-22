@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, useCallback, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { randomDelay } from '@/lib/utils';
 
@@ -11,6 +11,13 @@ type TVBlackoutProps = {
   disabled?: boolean;
 };
 
+type FlickerState = 'normal' | 'flickering' | 'off';
+
+type IntensityConfig = {
+  maxFlickers: number;
+  offDuration: [number, number];
+};
+
 export default function TVBlackout({
   children,
   initialDelay = 2000,
@@ -19,20 +26,105 @@ export default function TVBlackout({
   intensity = 'medium',
   disabled = false,
 }: TVBlackoutProps) {
-  const [flickerState, setFlickerState] = useState<'normal' | 'flickering' | 'off'>('normal');
+  const [flickerState, setFlickerState] = useState<FlickerState>('normal');
   const [isInitialized, setIsInitialized] = useState(false);
   const [currentOpacity, setCurrentOpacity] = useState(1);
 
-  // Configurer l'intensité de l'effet
-  const intensityConfig = {
+  // Refs for timer management
+  const mainTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const flickerTimeoutsRef = useRef<Set<NodeJS.Timeout>>(new Set());
+
+  // Intensity configuration
+  const intensityConfig: Record<string, IntensityConfig> = {
     low: { maxFlickers: 3, offDuration: [100, 300] },
     medium: { maxFlickers: 5, offDuration: [150, 500] },
     high: { maxFlickers: 8, offDuration: [200, 800] },
   };
 
-  const { maxFlickers, offDuration } = intensityConfig[intensity];
+  const { maxFlickers } = intensityConfig[intensity];
 
-  // Effet pour initialiser avec un délai
+  // Clear all flicker timeouts
+  const clearFlickerTimeouts = useCallback(() => {
+    flickerTimeoutsRef.current.forEach(timeout => clearTimeout(timeout));
+    flickerTimeoutsRef.current.clear();
+  }, []);
+
+  // Add timeout to tracking set
+  const addTimeout = useCallback((timeout: NodeJS.Timeout) => {
+    flickerTimeoutsRef.current.add(timeout);
+    return timeout;
+  }, []);
+
+  // Remove timeout from tracking set
+  const removeTimeout = useCallback((timeout: NodeJS.Timeout) => {
+    flickerTimeoutsRef.current.delete(timeout);
+    clearTimeout(timeout);
+  }, []);
+
+  // Trigger neon flicker effect
+  const triggerNeonFlicker = useCallback(() => {
+    if (disabled) return;
+    
+    setFlickerState('flickering');
+    
+    // Random number of flickers
+    const flickerCount = Math.floor(Math.random() * maxFlickers) + 2;
+    let currentFlicker = 0;
+    
+    const performFlicker = () => {
+      if (currentFlicker >= flickerCount) {
+        // End of flickering, return to normal
+        setFlickerState('normal');
+        setCurrentOpacity(1);
+        return;
+      }
+      
+      // Irregular flicker pattern with variable opacities
+      const flickerPattern = [
+        { opacity: 0, duration: Math.random() * 50 + 30 }, // Quick blackout
+        { opacity: Math.random() * 0.3 + 0.1, duration: Math.random() * 40 + 20 }, // Dim glow
+        { opacity: 0, duration: Math.random() * 80 + 40 }, // Blackout
+        { opacity: Math.random() * 0.6 + 0.4, duration: Math.random() * 60 + 30 }, // Partial recovery
+      ];
+      
+      let patternIndex = 0;
+      
+      const executePattern = () => {
+        if (patternIndex >= flickerPattern.length) {
+          currentFlicker++;
+          const nextFlickerTimeout = addTimeout(
+            setTimeout(performFlicker, Math.random() * 100 + 50)
+          );
+          return;
+        }
+        
+        const step = flickerPattern[patternIndex];
+        setCurrentOpacity(step.opacity);
+        
+        const patternTimeout = addTimeout(
+          setTimeout(() => {
+            patternIndex++;
+            executePattern();
+          }, step.duration)
+        );
+      };
+      
+      executePattern();
+    };
+    
+    performFlicker();
+  }, [disabled, maxFlickers, addTimeout]);
+
+  // Schedule next flicker
+  const scheduleNextFlicker = useCallback((): NodeJS.Timeout => {
+    const nextDelay = randomDelay(24000, 75000) / frequency;
+    return setTimeout(() => {
+      triggerNeonFlicker();
+      mainTimeoutRef.current = scheduleNextFlicker();
+    }, nextDelay);
+  }, [frequency, triggerNeonFlicker]);
+
+  // Initialize with delay
   useEffect(() => {
     if (disabled) return;
     
@@ -43,77 +135,34 @@ export default function TVBlackout({
     return () => clearTimeout(timer);
   }, [initialDelay, disabled]);
 
-  // Effet pour déclencher les clignotements irréguliers
+  // Trigger irregular flickers
   useEffect(() => {
     if (!isInitialized || disabled) return;
 
-    // Fonction pour créer un clignotement irrégulier comme un néon défaillant
-    const triggerNeonFlicker = () => {
-      setFlickerState('flickering');
-      
-      // Nombre aléatoire de clignotements
-      const flickerCount = Math.floor(Math.random() * maxFlickers) + 2;
-      let currentFlicker = 0;
-      
-      const performFlicker = () => {
-        if (currentFlicker >= flickerCount) {
-          // Fin du clignotement, retour à la normale
-          setFlickerState('normal');
-          setCurrentOpacity(1);
-          return;
-        }
-        
-        // Clignotement irrégulier avec opacités variables
-        const flickerPattern = [
-          { opacity: 0, duration: Math.random() * 50 + 30 }, // Extinction rapide
-          { opacity: Math.random() * 0.3 + 0.1, duration: Math.random() * 40 + 20 }, // Faible lueur
-          { opacity: 0, duration: Math.random() * 80 + 40 }, // Extinction
-          { opacity: Math.random() * 0.6 + 0.4, duration: Math.random() * 60 + 30 }, // Rallumage partiel
-        ];
-        
-        let patternIndex = 0;
-        
-        const executePattern = () => {
-          if (patternIndex >= flickerPattern.length) {
-            currentFlicker++;
-            setTimeout(performFlicker, Math.random() * 100 + 50);
-            return;
-          }
-          
-          const step = flickerPattern[patternIndex];
-          setCurrentOpacity(step.opacity);
-          
-          setTimeout(() => {
-            patternIndex++;
-            executePattern();
-          }, step.duration);
-        };
-        
-        executePattern();
-      };
-      
-      performFlicker();
-    };
-
-    // Programmer le prochain clignotement
-    const scheduleNextFlicker = (): NodeJS.Timeout => {
-      const nextDelay = randomDelay(24000, 75000) / frequency;
-      return setTimeout(() => {
-        triggerNeonFlicker();
-        timeoutRef.current = scheduleNextFlicker();
-      }, nextDelay);
-    };
-
-    // Référence pour pouvoir nettoyer le timeout
-    const timeoutRef = { current: null as NodeJS.Timeout | null };
-    timeoutRef.current = scheduleNextFlicker();
+    mainTimeoutRef.current = scheduleNextFlicker();
 
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (mainTimeoutRef.current) {
+        clearTimeout(mainTimeoutRef.current);
+        mainTimeoutRef.current = null;
       }
+      clearFlickerTimeouts();
     };
-  }, [isInitialized, frequency, maxFlickers, disabled]);
+  }, [isInitialized, disabled, scheduleNextFlicker, clearFlickerTimeouts]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (mainTimeoutRef.current) {
+        clearTimeout(mainTimeoutRef.current);
+      }
+      clearFlickerTimeouts();
+    };
+  }, [clearFlickerTimeouts]);
+
+  if (disabled) {
+    return <div className="relative overflow-hidden">{children}</div>;
+  }
 
   return (
     <div className={`relative overflow-hidden tv-blackout ${flickerState !== 'normal' ? 'flickering' : ''}`}>
@@ -125,7 +174,7 @@ export default function TVBlackout({
         {children}
       </motion.div>
       
-      {/* Overlay pour simuler l'effet néon défaillant */}
+      {/* Overlay to simulate failing neon effect */}
       <AnimatePresence>
         {flickerState === 'flickering' && currentOpacity < 0.8 && (
           <motion.div
@@ -138,7 +187,7 @@ export default function TVBlackout({
         )}
       </AnimatePresence>
       
-      {/* Effet de scintillement électrique */}
+      {/* Electric flicker effect */}
       {flickerState === 'flickering' && (
         <motion.div
           className="absolute inset-0 z-5 pointer-events-none"

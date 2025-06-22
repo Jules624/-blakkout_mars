@@ -85,7 +85,8 @@ export default function Recrutement() {
     
     // Vérifier si le code secret est entré
     if (name === 'secretCode' && value === 'BLKKT-AGENT') {
-      activateEasterEgg('secretAgent');
+      console.log('Code secret détecté:', value);
+      activateEasterEgg('activate_consoleAccess');
     }
   };
   
@@ -104,6 +105,23 @@ export default function Recrutement() {
       
       console.log('Formulaire soumis:', validData);
       setIsSuccess(true);
+      
+      // Déclencher une récompense pour la soumission du formulaire
+      if (selectedRole) {
+        // Activer un easter egg spécial pour le recrutement
+        activateEasterEgg('activate_hidden');
+        
+        // Notification de succès personnalisée selon le rôle
+        const roleMessages: Record<string, string> = {
+          'dj': '🎵 Candidature DJ reçue! Préparez vos meilleurs sets...',
+          'vj': '🎨 Candidature VJ reçue! Vos visuels vont illuminer nos événements...',
+          'dev': '💻 Candidature Dev reçue! Prêt à coder l\'avenir de @blakkout_mars?',
+          'comm': '📱 Candidature Communication reçue! Ensemble, nous allons faire du bruit...',
+          'secret': '🕵️ Agent Cryptique détecté... Transmission sécurisée initiée...'
+        };
+        
+        const message = roleMessages[selectedRole] || '✅ Candidature reçue avec succès!';
+      }
       
       // Réinitialiser le formulaire après succès
       setTimeout(() => {
@@ -145,6 +163,8 @@ export default function Recrutement() {
       <TVBlackout initialDelay={1000} frequency={0.05}>
         <div className="circuit-bg py-20 pt-32">
           <div className="container mx-auto px-4">
+
+            
             <motion.div
               className="mb-12 text-center"
               initial={{ opacity: 0, y: 20 }}

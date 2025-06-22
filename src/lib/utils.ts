@@ -73,8 +73,8 @@ export function formatCrypticDate(date: Date): string {
 export function checkEasterEgg(code: string, easterEggs: Record<string, boolean>): string | null {
   // Liste des easter eggs disponibles avec leurs codes
   const easterEggCodes: Record<string, string> = {
-    'konami': 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba',
-    'terminal': 'sudo access console --override',
+    'konami': 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightKeyBKeyA',
+    'consoleAccess': 'sudo access console --override',
     'glitch': 'ctrl+alt+glitch',
     'hidden': 'find_the_truth',
     'matrix': 'follow_the_white_rabbit',
@@ -88,6 +88,30 @@ export function checkEasterEgg(code: string, easterEggs: Record<string, boolean>
   }
 
   return null;
+}
+
+// Fonction pour activer directement un easter egg par son nom
+export function activateEasterEggByName(name: string, easterEggs: Record<string, boolean>): string | null {
+  const validEasterEggs = ['konami', 'consoleAccess', 'glitch', 'hidden', 'matrix'];
+  
+  if (validEasterEggs.includes(name) && !easterEggs[name]) {
+    return name;
+  }
+  
+  return null;
+}
+
+// Fonction pour déclencher des easter eggs spéciaux
+export function triggerSpecialEasterEgg(type: string): string | null {
+  const specialCodes: Record<string, string> = {
+    'konami_sequence': 'konami',
+    'console_hack': 'consoleAccess',
+    'reality_glitch': 'glitch',
+    'truth_seeker': 'hidden',
+    'neo_path': 'matrix'
+  };
+  
+  return specialCodes[type] || null;
 }
 
 // Fonction pour chiffrer un message simple (pour l'effet visuel uniquement, pas de sécurité réelle)

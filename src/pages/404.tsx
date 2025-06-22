@@ -43,12 +43,12 @@ export default function Custom404() {
       setErrorCode('1337');
       setErrorMessage('EASTER EGG TROUVÉ');
       setFoundEasterEgg(true);
-      activateEasterEgg('follow_the_white_rabbit');
+      activateEasterEgg('activate_hidden');
     } else if (path.includes('glitch') || path.includes('hack')) {
       setErrorCode('H4CK');
       setErrorMessage('SYSTÈME COMPROMIS');
       setFoundEasterEgg(true);
-      activateEasterEgg('ctrl+alt+glitch');
+      activateEasterEgg('activate_glitch');
     }
   }, [router.asPath, activateEasterEgg]);
 

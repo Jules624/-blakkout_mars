@@ -149,7 +149,7 @@ export default function Recrutement() {
   };
 
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Recrutement" />
       
       <TVBlackout initialDelay={1000} frequency={0.05}>

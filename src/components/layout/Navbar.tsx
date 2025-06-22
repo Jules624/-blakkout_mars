@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 type NavbarProps = {
   transparent?: boolean;
@@ -79,14 +80,18 @@ export default function Navbar({ transparent = false }: NavbarProps) {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className="font-display text-xl font-bold text-blakkout-primary">
-              @BLAKKOUT<span className="text-blakkout-accent">_</span>MARS
-            </span>
+          <Link href="/" className="flex items-center justify-center">
+            <Image
+              src="/assets/images/logo.png"
+              alt="@BLAKKOUT_MARS Logo"
+              width={120}
+              height={40}
+              className="object-contain h-auto w-auto max-h-10"
+            />
           </Link>
           
           {/* Navigation desktop */}
-          <nav className="hidden md:block">
+          <nav className="hidden lg:block">
             <ul className="flex space-x-6">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -103,7 +108,7 @@ export default function Navbar({ transparent = false }: NavbarProps) {
           
           {/* Bouton menu mobile */}
           <button 
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-blakkout-primary md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-blakkout-primary lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -140,7 +145,7 @@ export default function Navbar({ transparent = false }: NavbarProps) {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="absolute left-0 top-16 w-full bg-blakkout-background/95 backdrop-blur-md md:hidden"
+            className="absolute left-0 top-16 w-full bg-blakkout-background/95 backdrop-blur-md lg:hidden"
             initial="closed"
             animate="open"
             exit="closed"

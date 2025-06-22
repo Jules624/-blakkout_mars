@@ -145,7 +145,7 @@ export default function Merch() {
   }, 0);
   
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Merchandising" />
       <ModelCacheProvider>
         <TVBlackout initialDelay={1000} frequency={0.05}>

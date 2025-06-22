@@ -196,8 +196,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               <img 
                 src="/assets/images/logo.png" 
                 alt="BLAKKOUT_MARS" 
-                className="w-auto mx-auto filter" 
-                style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+                className="w-auto mx-auto" 
+                style={{ height: '384px' }}
               />
             </div>
             <p className="mt-4 text-gray-400">Système opérationnel</p>
@@ -309,8 +309,8 @@ const TVShutdownAnimation: React.FC<{ onComplete: () => void }> = ({ onComplete 
               <img 
                    src="/assets/images/logo.png" 
                    alt="BLAKKOUT_MARS" 
-                   className="w-auto mx-auto filter" 
-                   style={{ height: '576px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+                   className="w-auto mx-auto" 
+                   style={{ height: '576px' }}
                  />
             </motion.h1>
             <motion.p
@@ -421,8 +421,8 @@ export default function Home() {
                 <img 
                   src="/assets/images/logo.png" 
                   alt="BLAKKOUT_MARS" 
-                  className="w-auto mx-auto filter" 
-                  style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+                  className="w-auto mx-auto" 
+                  style={{ height: '384px' }}
                 />
               </div>
               <p className="mb-8 font-mono text-lg text-blakkout-foreground text-center">

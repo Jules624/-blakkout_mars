@@ -26,7 +26,7 @@ const Rewards = () => {
   };
 
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo
         title="Récompenses | BLAKKOUT"
         description="Découvrez vos récompenses exclusives débloquées via les easter eggs"

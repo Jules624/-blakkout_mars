@@ -147,7 +147,7 @@ export default function Galerie() {
   const uniqueTags = Array.from(new Set(mediaItems.flatMap(item => item.tags)));
   
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Galerie" />
       
       <TVBlackout initialDelay={1000} frequency={0.05} />

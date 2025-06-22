@@ -108,7 +108,7 @@ export default function Univers() {
   };
   
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Univers" />
       
       <div className="circuit-bg py-20 pt-32">
@@ -119,11 +119,17 @@ export default function Univers() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="mb-4 text-4xl font-bold text-white md:text-6xl">
-              L'UNIVERS
-            </h1>
-            <p className="text-xl text-gray-300">
-              Plongez dans l'histoire et les mystères de @BLAKKOUT_MARS
+            <div className="mb-4 flex justify-center">
+              <Image
+                src="/assets/images/logo.png"
+                alt="@BLAKKOUT_MARS Logo"
+                width={300}
+                height={100}
+                className="object-contain"
+              />
+            </div>
+            <p className="text-xl text-gray-300 text-center">
+              Plongez dans l'histoire et les mystères
             </p>
           </motion.div>
 

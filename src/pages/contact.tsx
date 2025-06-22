@@ -98,7 +98,7 @@ export default function Contact() {
 
 
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Contact" />
       
       <div className="circuit-bg py-20 pt-32">

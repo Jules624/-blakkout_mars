@@ -5,18 +5,10 @@ import { z } from 'zod';
 import Layout from '@/components/layout/Layout';
 import TVBlackout from '@/components/effects/TVBlackout';
 import { useEasterEggs } from '@/context/EasterEggContext';
+import { applicationSchema, type ApplicationFormData } from '@/lib/schemas';
 
-// Schéma de validation pour le formulaire
-const applicationSchema = z.object({
-  name: z.string().min(2, { message: 'Nom requis (min. 2 caractères)' }),
-  email: z.string().email({ message: 'Email invalide' }),
-  skills: z.string().min(3, { message: 'Compétences requises' }),
-  motivation: z.string().min(10, { message: 'Motivation requise (min. 10 caractères)' }),
-  portfolio: z.string().url({ message: 'URL invalide' }).optional().or(z.literal('')),
-  secretCode: z.string().optional(),
-});
-
-type ApplicationForm = z.infer<typeof applicationSchema>;
+// Schema imported from centralized schemas file
+type ApplicationForm = ApplicationFormData;
 
 // Rôles disponibles dans le collectif
 const availableRoles = [

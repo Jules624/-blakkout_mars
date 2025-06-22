@@ -5,18 +5,10 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 
 import Layout from '@/components/layout/Layout';
-
+import { contactSchema, type ContactFormData } from '@/lib/schemas';
 import { encryptMessage, decryptMessage } from '@/lib/utils';
 
-// Schéma de validation pour le formulaire
-const contactSchema = z.object({
-  name: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères' }),
-  email: z.string().email({ message: 'Adresse email invalide' }),
-  subject: z.string().min(5, { message: 'Le sujet doit contenir au moins 5 caractères' }),
-  message: z.string().min(10, { message: 'Le message doit contenir au moins 10 caractères' }),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
+// Schema imported from centralized schemas file
 
 export default function Contact() {
   const [formData, setFormData] = useState<ContactFormData>({

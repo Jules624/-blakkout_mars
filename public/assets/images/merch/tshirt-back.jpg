@@ -1,0 +1,40 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0a0a0a"/>
+  
+  <!-- T-shirt silhouette (back view) -->
+  <path d="M120 120 L120 100 Q120 80 140 80 L160 80 Q180 60 220 60 Q260 60 280 80 L300 80 Q320 80 320 100 L320 120 L340 140 L340 180 L320 180 L320 350 Q320 370 300 370 L140 370 Q120 370 120 350 L120 180 L100 180 L100 140 L120 120 Z" fill="#1a1a1a" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Circuit pattern on back -->
+  <g opacity="0.6">
+    <!-- Vertical lines -->
+    <line x1="180" y1="120" x2="180" y2="320" stroke="#00ff00" stroke-width="1"/>
+    <line x1="220" y1="120" x2="220" y2="320" stroke="#00ff00" stroke-width="1"/>
+    <line x1="260" y1="120" x2="260" y2="320" stroke="#00ff00" stroke-width="1"/>
+    
+    <!-- Horizontal lines -->
+    <line x1="160" y1="150" x2="280" y2="150" stroke="#00ff00" stroke-width="1"/>
+    <line x1="160" y1="200" x2="280" y2="200" stroke="#00ff00" stroke-width="1"/>
+    <line x1="160" y1="250" x2="280" y2="250" stroke="#00ff00" stroke-width="1"/>
+    
+    <!-- Circuit nodes -->
+    <rect x="178" y="148" width="4" height="4" fill="#00ff00"/>
+    <rect x="218" y="148" width="4" height="4" fill="#00ff00"/>
+    <rect x="258" y="148" width="4" height="4" fill="#00ff00"/>
+    <rect x="178" y="198" width="4" height="4" fill="#00ff00"/>
+    <rect x="218" y="198" width="4" height="4" fill="#00ff00"/>
+    <rect x="258" y="198" width="4" height="4" fill="#00ff00"/>
+    <rect x="178" y="248" width="4" height="4" fill="#00ff00"/>
+    <rect x="218" y="248" width="4" height="4" fill="#00ff00"/>
+    <rect x="258" y="248" width="4" height="4" fill="#00ff00"/>
+  </g>
+  
+  <!-- Binary code pattern -->
+  <g opacity="0.4">
+    <text x="220" y="140" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8">01001000 01000001 01000011 01001011</text>
+    <text x="220" y="280" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8">01000101 01010010 01010011</text>
+  </g>
+  
+  <!-- Size label -->
+  <text x="220" y="340" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8" opacity="0.5">SIZE: M</text>
+</svg>

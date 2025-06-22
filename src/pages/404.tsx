@@ -91,7 +91,8 @@ export default function Custom404() {
           className="relative z-10 max-w-2xl"
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
           <motion.div 
             className={`mb-6 ${isGlitching ? 'text-glitch' : ''}`}
@@ -117,7 +118,7 @@ export default function Custom404() {
           </motion.div>
           
           <motion.div variants={itemVariants}>
-            <div className="terminal mb-8 p-4 text-left">
+            <div className="console mb-8 p-4 text-left">
               <div className="font-mono text-sm text-blakkout-primary">
                 <p>$ locate page</p>
                 <p>ERROR: Page not found in filesystem</p>
@@ -140,7 +141,8 @@ export default function Custom404() {
             <motion.div 
               className="mt-8 rounded-md border border-blakkout-accent bg-blakkout-background/50 p-4"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: 1 }}
             >
               <p className="font-mono text-sm text-blakkout-accent">

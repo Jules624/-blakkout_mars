@@ -1,0 +1,41 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0a0a0a"/>
+  
+  <!-- Cap silhouette -->
+  <!-- Crown -->
+  <ellipse cx="200" cy="180" rx="80" ry="60" fill="#1a1a1a" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Visor -->
+  <ellipse cx="200" cy="240" rx="100" ry="30" fill="#1a1a1a" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Terminal logo on front -->
+  <g>
+    <!-- Terminal window -->
+    <rect x="160" y="150" width="80" height="50" rx="5" fill="none" stroke="#00ff00" stroke-width="2"/>
+    <rect x="160" y="150" width="80" height="12" fill="#00ff00" opacity="0.3"/>
+    
+    <!-- Terminal buttons -->
+    <circle cx="170" cy="156" r="2" fill="#ff0000"/>
+    <circle cx="178" cy="156" r="2" fill="#ffff00"/>
+    <circle cx="186" cy="156" r="2" fill="#00ff00"/>
+    
+    <!-- Terminal text -->
+    <text x="165" y="175" fill="#00ff00" font-family="monospace" font-size="8">$ sudo hack</text>
+    <text x="165" y="185" fill="#00ff00" font-family="monospace" font-size="8">[OK] Access</text>
+    <text x="165" y="195" fill="#00ff00" font-family="monospace" font-size="8">granted_</text>
+  </g>
+  
+  <!-- @BLAKKOUT_MARS on visor -->
+  <text x="200" y="245" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="10" font-weight="bold">@BLAKKOUT_MARS</text>
+  
+  <!-- Side panels detail -->
+  <g opacity="0.6">
+    <line x1="120" y1="160" x2="120" y2="200" stroke="#00ff00" stroke-width="1"/>
+    <line x1="280" y1="160" x2="280" y2="200" stroke="#00ff00" stroke-width="1"/>
+  </g>
+  
+  <!-- Product label -->
+  <text x="200" y="320" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="10" opacity="0.7">TERMINAL CAP</text>
+  <text x="200" y="340" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8" opacity="0.5">ADJUSTABLE FIT</text>
+</svg>

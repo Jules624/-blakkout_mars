@@ -95,10 +95,9 @@ export default function CrypticEventCard({
 
   return (
     <motion.div
-      className={`event-card ${isFeatured ? 'border-2' : 'border'} ${isSecret && !isRevealed ? 'opacity-70' : ''}`}
+      className={`event-card ${isFeatured ? 'border-2' : 'border'} ${isSecret && !isRevealed ? 'opacity-70' : ''} transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1`}
       initial="hidden"
       animate="visible"
-      whileHover={isRevealed ? "hover" : "visible"}
       variants={cardVariants}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

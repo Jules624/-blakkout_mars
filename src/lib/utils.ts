@@ -74,7 +74,7 @@ export function checkEasterEgg(code: string, easterEggs: Record<string, boolean>
   // Liste des easter eggs disponibles avec leurs codes
   const easterEggCodes: Record<string, string> = {
     'konami': 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba',
-    'terminal': 'sudo access --grant',
+    'terminal': 'sudo access console --override',
     'glitch': 'ctrl+alt+glitch',
     'hidden': 'find_the_truth',
     'matrix': 'follow_the_white_rabbit',

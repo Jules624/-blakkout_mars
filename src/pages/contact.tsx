@@ -5,7 +5,7 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 
 import Layout from '@/components/layout/Layout';
-import TerminalInput from '@/components/ui/TerminalInput';
+
 import { encryptMessage, decryptMessage } from '@/lib/utils';
 
 // Schéma de validation pour le formulaire
@@ -28,7 +28,7 @@ export default function Contact() {
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [showTerminal, setShowTerminal] = useState(false);
+
   const [encryptedPreview, setEncryptedPreview] = useState('');
 
   // Mettre à jour l'aperçu chiffré lorsque le message change
@@ -103,37 +103,7 @@ export default function Contact() {
     }
   };
 
-  // Commandes pour le terminal
-  const terminalCommands = [
-    {
-      command: 'contact',
-      description: 'Affiche les informations de contact',
-      action: () => (
-        <div className="space-y-2">
-          <p>Email: <span className="text-blakkout-primary">contact@blakkout-mars.fr</span></p>
-          <p>Instagram: <span className="text-blakkout-primary">@blakkout_mars</span></p>
-        </div>
-      ),
-    },
-    {
-      command: 'encrypt',
-      description: 'Chiffre un message',
-      action: (args: string[]) => {
-        if (args.length === 0) return 'Erreur: Spécifiez un message à chiffrer';
-        const message = args.join(' ');
-        return `Message chiffré: ${encryptMessage(message)}`;
-      },
-    },
-    {
-      command: 'decrypt',
-      description: 'Déchiffre un message',
-      action: (args: string[]) => {
-        if (args.length === 0) return 'Erreur: Spécifiez un message à déchiffrer';
-        const message = args.join(' ');
-        return `Message déchiffré: ${decryptMessage(message)}`;
-      },
-    },
-  ];
+
 
   return (
     <Layout>
@@ -144,7 +114,8 @@ export default function Contact() {
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
           >
             <h1 className="mb-2 font-display text-4xl text-blakkout-primary">CONTACT</h1>
@@ -154,12 +125,19 @@ export default function Contact() {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
+          <motion.div
+            className="grid grid-cols-1 gap-12 md:grid-cols-2"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             {/* Formulaire de contact */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div className="rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm">
                 <h2 className="mb-6 font-display text-2xl text-blakkout-accent">FORMULAIRE SÉCURISÉ</h2>
@@ -274,91 +252,28 @@ export default function Contact() {
               </div>
             </motion.div>
             
-            {/* Terminal et informations */}
+            {/* Informations de contact */}
             <motion.div
+              className="rounded-lg border border-blakkout-primary/20 bg-blakkout-background/80 p-6 backdrop-blur-sm"
               initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <div className="mb-6 rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm">
-                <h2 className="mb-6 font-display text-2xl text-blakkout-accent">INFORMATIONS</h2>
-                
-                <div className="space-y-4 font-mono">
-                  <div className="flex items-start">
-                    <div className="mr-3 text-blakkout-primary">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-blakkout-foreground/70">EMAIL</p>
-                      <p className="text-blakkout-primary">contact@blakkout-mars.fr</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="mr-3 text-blakkout-primary">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-blakkout-foreground/70">INSTAGRAM</p>
-                      <p className="text-blakkout-primary">@blakkout_mars</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="mr-3 text-blakkout-primary">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-blakkout-foreground/70">LOCALISATION</p>
-                      <p className="text-blakkout-primary">Marseille, France</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="font-display text-2xl text-blakkout-accent">TERMINAL</h2>
-                  <button 
-                    onClick={() => setShowTerminal(!showTerminal)}
-                    className="hacker-button text-sm"
-                  >
-                    {showTerminal ? 'FERMER' : 'OUVRIR'}
-                  </button>
-                </div>
-                
-                {showTerminal && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <TerminalInput 
-                      availableCommands={terminalCommands}
-                      initialMessage="Terminal de contact @blakkout_mars. Tapez 'contact' pour afficher les informations de contact ou 'help' pour voir toutes les commandes disponibles."
-                    />
-                  </motion.div>
-                )}
-                
-                {!showTerminal && (
-                  <p className="font-mono text-sm text-blakkout-foreground/70">
-                    Utilisez le terminal pour accéder à des fonctionnalités supplémentaires comme le chiffrement et déchiffrement de messages.
-                  </p>
-                )}
+              <h2 className="mb-4 font-display text-2xl text-blakkout-accent">INFORMATIONS</h2>
+              <div className="space-y-3">
+                <p className="text-blakkout-foreground">
+                  <span className="text-blakkout-primary">Email:</span> contact@blakkout-mars.fr
+                </p>
+                <p className="text-blakkout-foreground">
+                  <span className="text-blakkout-primary">Instagram:</span> @blakkout_mars
+                </p>
+                <p className="text-blakkout-foreground">
+                  <span className="text-blakkout-primary">Localisation:</span> Marseille, France
+                </p>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </Layout>

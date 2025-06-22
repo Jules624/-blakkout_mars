@@ -1,0 +1,15 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="noise" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="1" height="1" x="0" y="0" fill="#00ff00" opacity="0.1"/>
+      <rect width="1" height="1" x="2" y="1" fill="#00ff00" opacity="0.05"/>
+      <rect width="1" height="1" x="1" y="2" fill="#00ff00" opacity="0.08"/>
+      <rect width="1" height="1" x="3" y="3" fill="#00ff00" opacity="0.03"/>
+      <rect width="1" height="1" x="0" y="1" fill="#00ff00" opacity="0.06"/>
+      <rect width="1" height="1" x="2" y="0" fill="#00ff00" opacity="0.04"/>
+      <rect width="1" height="1" x="1" y="3" fill="#00ff00" opacity="0.07"/>
+      <rect width="1" height="1" x="3" y="2" fill="#00ff00" opacity="0.02"/>
+    </pattern>
+  </defs>
+  <rect width="100" height="100" fill="url(#noise)"/>
+</svg>

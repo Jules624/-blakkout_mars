@@ -75,7 +75,7 @@ const pastEvents: EventType[] = [
   },
   {
     id: 'event-p003',
-    title: 'TERMINAL ACCESS',
+    title: 'ACCESS',
     date: '2023-06-30',
     location: 'Warehouse K7, Marseille',
     description: 'Dans un entrepôt désaffecté, une nuit de techno industrielle et d\'installations numériques.',
@@ -109,7 +109,8 @@ export default function Evenements() {
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
           >
             <h1 className="mb-2 font-display text-4xl text-blakkout-primary">ÉVÉNEMENTS</h1>
@@ -123,7 +124,8 @@ export default function Evenements() {
           <motion.div 
             className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex space-x-2">
@@ -169,7 +171,8 @@ export default function Evenements() {
             <motion.div
               className="mb-16"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <h2 className="mb-6 font-display text-2xl text-blakkout-accent">ÉVÉNEMENTS À VENIR</h2>
@@ -180,7 +183,8 @@ export default function Evenements() {
                     <motion.div
                       key={event.id}
                       initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
                       transition={{ duration: 0.5, delay: 0.1 * index }}
                     >
                       <CrypticEventCard
@@ -208,7 +212,8 @@ export default function Evenements() {
           {(filter === 'all' || filter === 'past') && (
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
               <h2 className="mb-6 font-display text-2xl text-blakkout-accent">ÉVÉNEMENTS PASSÉS</h2>
@@ -219,7 +224,8 @@ export default function Evenements() {
                     <motion.div
                       key={event.id}
                       initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
                       transition={{ duration: 0.5, delay: 0.1 * index }}
                     >
                       <CrypticEventCard

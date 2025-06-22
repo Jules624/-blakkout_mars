@@ -1,5 +1,5 @@
-import { DefaultSeo } from 'next-seo';
 import { AppProps } from 'next/app';
+import { DefaultSeo } from 'next-seo';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from 'next-themes';
 

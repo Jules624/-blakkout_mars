@@ -48,9 +48,14 @@
 
 /* Effets spéciaux */
 @layer components {
-  /* Effet de scan ligne CRT */
+  /* Effet de scan ligne CRT - optimisé */
   .crt-scan-line {
-    @apply pointer-events-none fixed inset-0 h-screen w-screen overflow-hidden before:absolute before:left-0 before:top-0 before:h-[1px] before:w-full before:animate-scan-line before:bg-white/10 before:content-[""] after:absolute after:bottom-0 after:left-0 after:h-[10px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-black/80 after:content-[""];
+    @apply pointer-events-none fixed inset-0 h-screen w-screen overflow-hidden before:absolute before:left-0 before:top-0 before:h-[1px] before:w-full before:bg-white/10 before:content-[""] after:absolute after:bottom-0 after:left-0 after:h-[10px] after:w-full after:bg-gradient-to-b after:from-transparent after:to-black/80 after:content-[""];
+  }
+  
+  /* Animation scan-line uniquement au hover */
+  .crt-scan-line:hover::before {
+    @apply animate-scan-line;
   }
 
   /* Effet de bruit de fond */
@@ -58,23 +63,33 @@
     @apply relative before:absolute before:inset-0 before:bg-noise before:opacity-[0.03] before:mix-blend-overlay before:content-[""];
   }
 
-  /* Effet de glitch sur texte */
+  /* Effet de glitch sur texte - optimisé */
   .text-glitch {
-    @apply relative inline-block animate-glitch text-blakkout-primary;
+    @apply relative inline-block text-blakkout-primary;
     text-shadow: 0.05em 0 0 rgba(255, 0, 255, 0.75),
       -0.025em -0.05em 0 rgba(0, 255, 255, 0.75),
       0.025em 0.05em 0 rgba(0, 255, 0, 0.75);
   }
+  
+  /* Animation glitch uniquement au hover */
+  .text-glitch:hover {
+    @apply animate-glitch;
+  }
 
-  /* Effet de terminal */
-  .terminal {
+  /* Effet de console */
+  .console {
     @apply rounded-md border border-blakkout-primary bg-blakkout-background p-4 font-mono text-blakkout-primary shadow-[0_0_10px_rgba(0,255,0,0.5)];
   }
 
-  /* Effet de texte terminal typing */
-  .terminal-typing {
+  /* Effet de texte console typing */
+  .console-typing {
     @apply overflow-hidden whitespace-nowrap border-r-2 border-blakkout-primary pr-1 font-mono text-blakkout-primary;
-    animation: terminal-typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    animation: console-typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+
+  @keyframes console-typing {
+    from { width: 0 }
+    to { width: 100% }
   }
 
   @keyframes blink-caret {
@@ -82,9 +97,14 @@
     50% { border-color: theme('colors.blakkout.primary') }
   }
 
-  /* Effet de TV blackout */
+  /* Effet de TV blackout - optimisé */
   .tv-blackout {
-    @apply relative overflow-hidden before:absolute before:inset-0 before:animate-tv-blackout before:bg-black before:content-[""];
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-black before:content-[""];
+  }
+  
+  /* Animation TV blackout uniquement quand nécessaire */
+  .tv-blackout.active::before {
+    @apply animate-tv-blackout;
   }
 
   /* Effet de grille */
@@ -103,8 +123,13 @@
     perspective: 1000px;
   }
 
+  .rotating-3d-container canvas {
+    @apply h-full w-full;
+    display: block !important;
+  }
+
   .rotating-3d-object {
-    @apply h-full w-full transform-style-3d animate-rotate-3d;
+    @apply h-full w-full transform-style-3d;
   }
   
   /* Ajout de la classe transform-style-3d */

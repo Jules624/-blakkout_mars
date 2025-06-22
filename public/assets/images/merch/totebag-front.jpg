@@ -1,0 +1,50 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0a0a0a"/>
+  
+  <!-- Tote bag silhouette -->
+  <rect x="120" y="140" width="160" height="200" rx="5" fill="#1a1a1a" stroke="#00ff00" stroke-width="2"/>
+  
+  <!-- Handles -->
+  <path d="M150 140 Q150 120 170 120 Q190 120 190 140" fill="none" stroke="#00ff00" stroke-width="3"/>
+  <path d="M210 140 Q210 120 230 120 Q250 120 250 140" fill="none" stroke="#00ff00" stroke-width="3"/>
+  
+  <!-- Glitch effect design -->
+  <g>
+    <!-- Main GLITCH text -->
+    <text x="200" y="200" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="24" font-weight="bold">G̸L̷I̶T̸C̷H̶</text>
+    
+    <!-- Glitch bars -->
+    <rect x="140" y="190" width="120" height="3" fill="#ff0000" opacity="0.8"/>
+    <rect x="150" y="195" width="100" height="2" fill="#00ff00" opacity="0.6"/>
+    <rect x="160" y="205" width="80" height="2" fill="#ff0000" opacity="0.7"/>
+    
+    <!-- Corrupted pixels -->
+    <rect x="145" y="185" width="2" height="2" fill="#ff0000"/>
+    <rect x="255" y="195" width="2" height="2" fill="#00ff00"/>
+    <rect x="165" y="210" width="2" height="2" fill="#ff0000"/>
+    <rect x="235" y="188" width="2" height="2" fill="#00ff00"/>
+  </g>
+  
+  <!-- Digital noise pattern -->
+  <g opacity="0.4">
+    <rect x="140" y="220" width="1" height="1" fill="#00ff00"/>
+    <rect x="145" y="225" width="1" height="1" fill="#00ff00"/>
+    <rect x="150" y="230" width="1" height="1" fill="#00ff00"/>
+    <rect x="155" y="235" width="1" height="1" fill="#00ff00"/>
+    <rect x="250" y="220" width="1" height="1" fill="#00ff00"/>
+    <rect x="255" y="225" width="1" height="1" fill="#00ff00"/>
+    <rect x="260" y="230" width="1" height="1" fill="#00ff00"/>
+    <rect x="265" y="235" width="1" height="1" fill="#00ff00"/>
+  </g>
+  
+  <!-- Binary code -->
+  <text x="200" y="260" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8" opacity="0.6">01000111 01001100 01001001 01010100 01000011 01001000</text>
+  
+  <!-- @BLAKKOUT_MARS logo -->
+  <text x="200" y="300" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="12" font-weight="bold">@BLAKKOUT_MARS</text>
+  
+  <!-- Product label -->
+  <text x="200" y="360" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="10" opacity="0.7">GLITCH TOTE BAG</text>
+  <text x="200" y="380" text-anchor="middle" fill="#00ff00" font-family="monospace" font-size="8" opacity="0.5">100% ORGANIC COTTON</text>
+</svg>

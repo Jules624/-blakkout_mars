@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import Layout from '@/components/layout/Layout';
-import RotatingMerch3D from '@/components/merch/RotatingMerch3D';
+import RotatingMerch3D, { ModelCacheProvider } from '@/components/merch/RotatingMerch3D';
 import TVBlackout from '@/components/effects/TVBlackout';
 
 // Types pour les produits
@@ -54,7 +54,7 @@ const products: Product[] = [
   },
   {
     id: 'prod-003',
-    name: 'CASQUETTE TERMINAL',
+    name: 'CASQUETTE ACCESS',
     description: 'Casquette snapback noire avec broderie logo @blakkout_mars et détails réfléchissants.',
     price: 25,
     category: 'accessories',
@@ -113,6 +113,7 @@ export default function Merch() {
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<{productId: string, quantity: number}[]>([]);
+
   
   // Filtrer les produits par catégorie
   const filteredProducts = activeCategory === 'all' 
@@ -146,14 +147,15 @@ export default function Merch() {
   return (
     <Layout>
       <NextSeo title="Merchandising" />
-      
-      <TVBlackout initialDelay={1000} frequency={0.05}>
-        <div className="circuit-bg py-20 pt-32">
+      <ModelCacheProvider>
+        <TVBlackout initialDelay={1000} frequency={0.05}>
+          <div className="circuit-bg py-20 pt-32">
           <div className="container mx-auto px-4">
             <motion.div
               className="mb-12 text-center"
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5 }}
             >
               <h1 className="mb-2 font-display text-4xl text-blakkout-primary">MERCHANDISING</h1>
@@ -162,12 +164,12 @@ export default function Merch() {
                 Découvrez notre collection de vêtements et accessoires exclusifs.
               </p>
             </motion.div>
-            
             {/* Filtres par catégorie */}
             <motion.div 
               className="mb-8 flex flex-wrap justify-center gap-2"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <button 
@@ -201,24 +203,23 @@ export default function Merch() {
                 ÉDITION LIMITÉE
               </button>
             </motion.div>
-            
             {/* Grille de produits */}
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {filteredProducts.map((product, index) => (
                   <motion.div
                     key={product.id}
-                    className="group relative overflow-hidden rounded-lg border border-blakkout-primary/20 bg-blakkout-background/80 backdrop-blur-sm"
+                    className="group relative overflow-hidden rounded-lg border border-blakkout-primary/20 bg-blakkout-background/80 backdrop-blur-sm transition-transform duration-200 hover:scale-[1.02]"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
                   >
                     {/* Badge édition limitée */}
                     {product.isLimited && (
@@ -226,10 +227,10 @@ export default function Merch() {
                         LIMITED
                       </div>
                     )}
-                    
                     {/* Modèle 3D */}
                     <div className="aspect-square relative">
                       <RotatingMerch3D
+                        key={`${product.id}-${activeCategory}`}
                         modelUrl={product.modelUrl}
                         productName={product.name}
                         images={product.images}
@@ -241,8 +242,7 @@ export default function Merch() {
                         autoRotate={true}
                         className="w-full h-full"
                       />
-                    </div>
-                    
+                     </div>
                     {/* Informations produit */}
                     <div className="p-4">
                       <h3 className="mb-2 font-mono text-lg text-blakkout-primary">
@@ -251,12 +251,10 @@ export default function Merch() {
                       <p className="mb-3 text-sm text-blakkout-foreground/80">
                         {product.description}
                       </p>
-                      
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-xl text-blakkout-primary">
                           {product.price}€
                         </span>
-                        
                         {product.available ? (
                           <button
                             onClick={() => addToCart(product.id)}
@@ -270,7 +268,6 @@ export default function Merch() {
                           </span>
                         )}
                       </div>
-                      
                       {product.isLimited && product.limitedQuantity && (
                         <div className="mt-2 text-xs font-mono text-blakkout-primary/60">
                           Seulement {product.limitedQuantity} exemplaires
@@ -281,7 +278,6 @@ export default function Merch() {
                 ))}
               </AnimatePresence>
             </motion.div>
-            
             {/* Panier flottant */}
             {cartItems.length > 0 && (
               <motion.div
@@ -304,8 +300,9 @@ export default function Merch() {
               </motion.div>
             )}
           </div>
-        </div>
-      </TVBlackout>
+          </div>
+        </TVBlackout>
+      </ModelCacheProvider>
     </Layout>
   );
 }

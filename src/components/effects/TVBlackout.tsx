@@ -91,7 +91,7 @@ export default function TVBlackout({
   };
 
   return (
-    <div className="relative overflow-hidden">
+    <div className={`relative overflow-hidden tv-blackout ${isBlackout ? 'active' : ''}`}>
       {children}
       
       <AnimatePresence>

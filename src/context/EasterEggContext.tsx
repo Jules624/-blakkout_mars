@@ -27,7 +27,7 @@ export function EasterEggProvider({ children }: EasterEggProviderProps) {
   // État pour suivre les easter eggs trouvés
   const [easterEggs, setEasterEggs] = useState<Record<string, boolean>>({
     konami: false,
-    terminal: false,
+    consoleAccess: false,
     glitch: false,
     hidden: false,
     matrix: false,
@@ -61,7 +61,7 @@ export function EasterEggProvider({ children }: EasterEggProviderProps) {
   const resetEasterEggs = () => {
     setEasterEggs({
       konami: false,
-      terminal: false,
+      consoleAccess: false,
       glitch: false,
       hidden: false,
       matrix: false,

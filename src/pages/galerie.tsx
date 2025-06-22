@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 import Layout from '@/components/layout/Layout';
-import TerminalInput from '@/components/ui/TerminalInput';
+
 import TVBlackout from '@/components/ui/TVBlackout';
 
 // Types pour les médias
@@ -86,142 +86,39 @@ const mediaItems: MediaItem[] = [
   {
     id: 'media-007',
     type: 'image',
-    title: 'TERMINAL ACCESS - WAREHOUSE',
-    description: 'L\'entrepôt K7 transformé pour Terminal Access',
-    src: '/assets/images/gallery/terminal-warehouse.jpg',
-    event: 'TERMINAL ACCESS',
+    title: 'ACCESS - WAREHOUSE',
+    description: 'L\'entrepôt K7 transformé pour Access',
+    src: '/assets/images/gallery/access-warehouse.jpg',
+    event: 'ACCESS',
     date: '2023-06-30',
     tags: ['venue', 'decoration', 'industrial'],
   },
   {
     id: 'media-008',
     type: 'image',
-    title: 'TERMINAL ACCESS - LIGHT SHOW',
-    description: 'Le spectacle de lumière pendant Terminal Access',
-    src: '/assets/images/gallery/terminal-lightshow.jpg',
-    event: 'TERMINAL ACCESS',
+    title: 'ACCESS - LIGHT SHOW',
+    description: 'Le spectacle de lumière pendant Access',
+    src: '/assets/images/gallery/access-lightshow.jpg',
+    event: 'ACCESS',
     date: '2023-06-30',
     tags: ['light', 'visual', 'atmosphere'],
   },
   {
     id: 'media-009',
     type: 'video',
-    title: 'TERMINAL ACCESS - AFTERMOVIE',
-    description: 'Résumé de la soirée Terminal Access',
-    src: '/assets/videos/terminal-aftermovie.mp4',
-    event: 'TERMINAL ACCESS',
+    title: 'ACCESS - AFTERMOVIE',
+    description: 'Résumé de la soirée Access',
+    src: '/assets/videos/access-aftermovie.mp4',
+    event: 'ACCESS',
     date: '2023-06-30',
     tags: ['aftermovie', 'highlights', 'recap'],
   },
 ];
 
-// Commandes pour le terminal
-const galleryCommands = [
-  {
-    command: 'list',
-    description: 'Liste tous les médias ou filtre par type (list [type])',
-    action: (args: string[]) => {
-      const type = args[0]?.toLowerCase();
-      let filtered = mediaItems;
-      
-      if (type === 'image' || type === 'video') {
-        filtered = mediaItems.filter(item => item.type === type);
-      }
-      
-      return (
-        <div className="space-y-1 font-mono text-sm">
-          <p className="mb-2 text-blakkout-accent">{filtered.length} médias trouvés:</p>
-          {filtered.map(item => (
-            <div key={item.id} className="flex">
-              <span className="mr-2 text-blakkout-primary">{item.id}</span>
-              <span className="text-blakkout-foreground">{item.title}</span>
-              <span className="ml-2 text-blakkout-foreground/50">[{item.type}]</span>
-            </div>
-          ))}
-        </div>
-      );
-    },
-  },
-  {
-    command: 'show',
-    description: 'Affiche un média spécifique (show [id])',
-    action: (args: string[]) => {
-      const id = args[0];
-      const item = mediaItems.find(item => item.id === id);
-      
-      if (!item) {
-        return `Erreur: Média avec l'ID "${id}" non trouvé. Utilisez la commande "list" pour voir tous les médias disponibles.`;
-      }
-      
-      return (
-        <div className="space-y-2 font-mono text-sm">
-          <p className="text-blakkout-accent">{item.title}</p>
-          <p className="text-blakkout-foreground">{item.description}</p>
-          <p>
-            <span className="text-blakkout-foreground/50">Événement: </span>
-            <span className="text-blakkout-primary">{item.event}</span>
-          </p>
-          <p>
-            <span className="text-blakkout-foreground/50">Date: </span>
-            <span className="text-blakkout-primary">{item.date}</span>
-          </p>
-          <p>
-            <span className="text-blakkout-foreground/50">Tags: </span>
-            <span className="text-blakkout-primary">{item.tags.join(', ')}</span>
-          </p>
-          <p className="text-blakkout-foreground/50">Utilisez la galerie visuelle pour voir ce média.</p>
-        </div>
-      );
-    },
-  },
-  {
-    command: 'filter',
-    description: 'Filtre les médias par tag ou événement (filter [tag|event] [valeur])',
-    action: (args: string[]) => {
-      if (args.length < 2) {
-        return 'Erreur: Utilisez le format "filter [tag|event] [valeur]"';
-      }
-      
-      const filterType = args[0].toLowerCase();
-      const filterValue = args[1].toLowerCase();
-      
-      let filtered: MediaItem[] = [];
-      
-      if (filterType === 'tag') {
-        filtered = mediaItems.filter(item => 
-          item.tags.some(tag => tag.toLowerCase() === filterValue)
-        );
-      } else if (filterType === 'event') {
-        filtered = mediaItems.filter(item => 
-          item.event.toLowerCase().includes(filterValue)
-        );
-      } else {
-        return `Erreur: Type de filtre "${filterType}" non reconnu. Utilisez "tag" ou "event".`;
-      }
-      
-      if (filtered.length === 0) {
-        return `Aucun média trouvé pour ${filterType} "${filterValue}".`;
-      }
-      
-      return (
-        <div className="space-y-1 font-mono text-sm">
-          <p className="mb-2 text-blakkout-accent">{filtered.length} médias trouvés pour {filterType} "{filterValue}":</p>
-          {filtered.map(item => (
-            <div key={item.id} className="flex">
-              <span className="mr-2 text-blakkout-primary">{item.id}</span>
-              <span className="text-blakkout-foreground">{item.title}</span>
-              <span className="ml-2 text-blakkout-foreground/50">[{item.type}]</span>
-            </div>
-          ))}
-        </div>
-      );
-    },
-  },
-];
+
 
 export default function Galerie() {
-  const [activeView, setActiveView] = useState<'grid' | 'terminal'>('grid');
-  const [showTerminal, setShowTerminal] = useState(false);
+  const [activeView, setActiveView] = useState<'grid'>('grid');
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [filter, setFilter] = useState<{
     type: MediaType | 'all';
@@ -274,7 +171,8 @@ export default function Galerie() {
           <motion.div 
             className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex space-x-2">
@@ -284,15 +182,7 @@ export default function Galerie() {
               >
                 GRILLE
               </button>
-              <button 
-                onClick={() => {
-                  setActiveView('terminal');
-                  setShowTerminal(true);
-                }}
-                className={`hacker-button ${activeView === 'terminal' ? 'active' : ''}`}
-              >
-                TERMINAL
-              </button>
+
             </div>
             
             <div className="flex flex-wrap gap-2">
@@ -344,7 +234,8 @@ export default function Galerie() {
                     <motion.div
                       key={item.id}
                       initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
                       transition={{ duration: 0.5, delay: 0.1 * index }}
                       onClick={() => setSelectedMedia(item)}
                       className="cursor-pointer"
@@ -403,71 +294,7 @@ export default function Galerie() {
             </motion.div>
           )}
           
-          {/* Vue terminal */}
-          {activeView === 'terminal' && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="font-display text-2xl text-blakkout-accent">TERMINAL GALERIE</h2>
-                  <button 
-                    onClick={() => setShowTerminal(!showTerminal)}
-                    className="hacker-button text-sm"
-                  >
-                    {showTerminal ? 'FERMER' : 'OUVRIR'}
-                  </button>
-                </div>
-                
-                {showTerminal ? (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <TerminalInput 
-                      availableCommands={galleryCommands}
-                      initialMessage="Terminal de la galerie @blakkout_mars. Tapez 'list' pour voir tous les médias disponibles ou 'help' pour voir toutes les commandes."
-                    />
-                  </motion.div>
-                ) : (
-                  <p className="font-mono text-sm text-blakkout-foreground/70">
-                    Utilisez le terminal pour naviguer dans la galerie avec des commandes comme 'list', 'show' et 'filter'.
-                  </p>
-                )}
-              </div>
-              
-              <div className="mt-8">
-                <h2 className="mb-6 font-display text-2xl text-blakkout-accent">GUIDE DU TERMINAL</h2>
-                
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-4">
-                    <h3 className="mb-2 font-display text-lg text-blakkout-primary">COMMANDES DE BASE</h3>
-                    <ul className="space-y-2 font-mono text-sm">
-                      <li><span className="text-blakkout-accent">help</span> - Affiche toutes les commandes disponibles</li>
-                      <li><span className="text-blakkout-accent">clear</span> - Efface le terminal</li>
-                      <li><span className="text-blakkout-accent">list</span> - Liste tous les médias</li>
-                      <li><span className="text-blakkout-accent">list image</span> - Liste toutes les images</li>
-                      <li><span className="text-blakkout-accent">list video</span> - Liste toutes les vidéos</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-4">
-                    <h3 className="mb-2 font-display text-lg text-blakkout-primary">COMMANDES AVANCÉES</h3>
-                    <ul className="space-y-2 font-mono text-sm">
-                      <li><span className="text-blakkout-accent">show media-001</span> - Affiche les détails d'un média spécifique</li>
-                      <li><span className="text-blakkout-accent">filter tag aftermovie</span> - Filtre les médias par tag</li>
-                      <li><span className="text-blakkout-accent">filter event NEURAL</span> - Filtre les médias par événement</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
+
           
           {/* Modal pour média sélectionné */}
           <AnimatePresence>

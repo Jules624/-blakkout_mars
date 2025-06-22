@@ -1,11 +1,106 @@
-import { useRef, useState, useEffect, Suspense } from 'react';
+import React, { useState, useRef, Suspense, useEffect, createContext, useContext } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Group } from 'three';
+import { Group, LoadingManager } from 'three';
 
-// Composant pour le modèle 3D avec gestion d'erreur
+// Context pour le cache des modèles
+const ModelCacheContext = createContext<{
+  preloadedModels: Map<string, any>;
+  preloadModel: (url: string) => Promise<any>;
+  isPreloading: boolean;
+}>({ 
+  preloadedModels: new Map(), 
+  preloadModel: async () => null,
+  isPreloading: false 
+});
+
+// Hook pour utiliser le cache des modèles
+function useModelCache() {
+  return useContext(ModelCacheContext);
+}
+
+// Provider pour le cache des modèles
+export function ModelCacheProvider({ children }: { children: React.ReactNode }) {
+  const [preloadedModels] = useState(() => new Map());
+  const [isPreloading, setIsPreloading] = useState(false);
+  const loaderRef = useRef<GLTFLoader | null>(null);
+
+  // Initialiser le loader une seule fois
+  useEffect(() => {
+    if (!loaderRef.current) {
+      const manager = new LoadingManager();
+      loaderRef.current = new GLTFLoader(manager);
+    }
+  }, []);
+
+  const preloadModel = async (url: string): Promise<any> => {
+    if (preloadedModels.has(url)) {
+      return preloadedModels.get(url);
+    }
+
+    if (!loaderRef.current) {
+      throw new Error('Loader not initialized');
+    }
+
+    try {
+      console.log('Préchargement du modèle:', url);
+      const gltf = await new Promise((resolve, reject) => {
+        loaderRef.current!.load(
+          url,
+          (gltf) => resolve(gltf),
+          (progress) => {
+            console.log('Progression du préchargement:', url, (progress.loaded / progress.total * 100) + '%');
+          },
+          (error) => reject(error)
+        );
+      });
+      
+      preloadedModels.set(url, gltf);
+      console.log('Modèle préchargé avec succès:', url);
+      return gltf;
+    } catch (error) {
+      console.error('Erreur lors du préchargement:', url, error);
+      throw error;
+    }
+  };
+
+  // Fonction pour précharger plusieurs modèles
+  const preloadModels = async (urls: string[]) => {
+    setIsPreloading(true);
+    try {
+      await Promise.allSettled(urls.map(url => preloadModel(url)));
+      console.log('Préchargement terminé pour', urls.length, 'modèles');
+    } catch (error) {
+      console.error('Erreur lors du préchargement des modèles:', error);
+    } finally {
+      setIsPreloading(false);
+    }
+  };
+
+  // Précharger automatiquement les modèles au montage
+  useEffect(() => {
+    const modelUrls = [
+      '/assets/models/tshirt.glb',
+      '/assets/models/hoodie.glb',
+      '/assets/models/cap.glb',
+      '/assets/models/totebag.glb',
+      '/assets/models/poster.glb',
+      '/assets/models/jacket.glb'
+    ];
+    
+    preloadModels(modelUrls);
+  }, []);
+
+  return (
+    <ModelCacheContext.Provider value={{ preloadedModels, preloadModel, isPreloading }}>
+      {children}
+    </ModelCacheContext.Provider>
+  );
+}
+
+// Composant pour le modèle 3D avec gestion d'erreur améliorée et cache
 function Model({ url, scale = [1, 1, 1], position = [0, 0, 0], rotation = [0, 0, 0], onError }: { 
   url: string; 
   scale?: [number, number, number]; 
@@ -14,38 +109,80 @@ function Model({ url, scale = [1, 1, 1], position = [0, 0, 0], rotation = [0, 0,
   onError?: () => void;
 }) {
   const modelRef = useRef<Group>(null);
-  
-  try {
-    const gltf = useLoader(GLTFLoader, url, undefined, (error) => {
-      console.error('Erreur de chargement du modèle 3D:', error);
-      onError?.();
-    });
+  const { preloadedModels } = useModelCache();
+  const [gltf, setGltf] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    // Animation de rotation automatique
-    useFrame((state) => {
-      if (modelRef.current) {
-        modelRef.current.rotation.y += 0.005;
+  // Charger le modèle depuis le cache ou via useLoader en fallback
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Vérifier d'abord le cache
+        if (preloadedModels.has(url)) {
+          console.log('Modèle trouvé dans le cache:', url);
+          const cachedModel = preloadedModels.get(url);
+          setGltf(cachedModel);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Si pas dans le cache, charger normalement
+        console.log('Modèle non trouvé dans le cache, chargement direct:', url);
+        const loader = new GLTFLoader();
+        const loadedGltf = await new Promise((resolve, reject) => {
+          loader.load(
+            url,
+            (gltf) => resolve(gltf),
+            undefined,
+            (error) => reject(error)
+          );
+        });
+        
+        setGltf(loadedGltf);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Erreur lors du chargement du modèle 3D:', url, error);
+        setIsLoading(false);
+        onError?.();
       }
-    });
+    };
 
-    return (
-      <group ref={modelRef} position={position} rotation={rotation} scale={scale}>
-        <primitive object={gltf.scene} />
-      </group>
-    );
-  } catch (error) {
-    console.error('Erreur lors du rendu du modèle 3D:', error);
+    loadModel();
+  }, [url, preloadedModels, onError]);
+
+  // Animation de rotation automatique
+  useFrame(() => {
+    if (modelRef.current) {
+      modelRef.current.rotation.y += 0.005;
+    }
+  });
+
+  if (isLoading) {
+    return <LoadingFallback />;
+  }
+
+  if (!gltf || !gltf.scene) {
+    console.error('Modèle GLTF invalide:', url);
     onError?.();
     return null;
   }
+
+  return (
+    <group ref={modelRef} position={position} rotation={rotation} scale={scale}>
+      <primitive object={gltf.scene.clone()} />
+    </group>
+  );
 }
 
-// Fallback pour le chargement
+// Fallback pour le chargement - compatible avec React Three Fiber
 function LoadingFallback() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-glitch text-xl">CHARGEMENT...</div>
-    </div>
+    <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshBasicMaterial color="#00ff00" wireframe />
+    </mesh>
   );
 }
 
@@ -110,23 +247,31 @@ export default function RotatingMerch3D({
   // Utiliser productName et productPrice en priorité, sinon name et price
   const displayName = productName || name || 'Produit';
   const displayPrice = productPrice || price || '';
-  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 2;
+  const { preloadedModels, isPreloading } = useModelCache();
 
-  // Simuler un chargement
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Gérer les erreurs de chargement
+  // Gérer les erreurs de chargement avec retry
   const handleError = () => {
-    setHasError(true);
-    setIsLoading(false);
+    if (retryCount < maxRetries) {
+      console.log(`Tentative de rechargement ${retryCount + 1}/${maxRetries} pour:`, modelUrl);
+      setRetryCount(prev => prev + 1);
+      // Forcer un re-render après un délai
+      setTimeout(() => {
+        setHasError(false);
+      }, 1000);
+    } else {
+      console.error('Échec définitif du chargement après', maxRetries, 'tentatives:', modelUrl);
+      setHasError(true);
+    }
   };
+
+  // Reset retry count when modelUrl changes
+  useEffect(() => {
+    setRetryCount(0);
+    setHasError(false);
+  }, [modelUrl]);
 
   // Si modelUrl est vide, afficher directement le fallback d'erreur
   if (!modelUrl) {
@@ -137,7 +282,6 @@ export default function RotatingMerch3D({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         onClick={onClick}
-        whileHover={{ scale: 1.02 }}
       >
         <ErrorFallback productName={displayName} images={images} />
       </motion.div>
@@ -151,28 +295,61 @@ export default function RotatingMerch3D({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       onClick={onClick}
-      whileHover={{ scale: 1.02 }}
     >
-      {isLoading ? (
-        <LoadingFallback />
-      ) : hasError ? (
+      {hasError ? (
         <ErrorFallback productName={displayName} images={images} />
       ) : (
         <>
-          <Canvas style={{ background: backgroundColor }}>
-            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+          <Canvas 
+            style={{ 
+              background: backgroundColor,
+              width: '100%',
+              height: '100%',
+              display: 'block'
+            }}
+            camera={{ position: [0, 0, 5], fov: 50 }}
+            onCreated={({ gl }) => {
+              // Configuration WebGL pour une meilleure stabilité
+              gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+              gl.setClearColor(0x000000, 0);
+            }}
+            onError={(error) => {
+              console.error('Erreur Canvas WebGL:', error);
+              handleError();
+            }}
+          >
             <ambientLight intensity={0.5} />
             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-            <Suspense fallback={null}>
+            <Suspense fallback={<LoadingFallback />}>
               <Model url={modelUrl} scale={scale} position={position} rotation={rotation} onError={handleError} />
               <Environment preset="city" />
-              {showControls && <OrbitControls enableZoom={false} />}
+              {showControls && <OrbitControls enableZoom={false} enablePan={false} />}
             </Suspense>
           </Canvas>
           
           <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-blakkout-background/80 to-transparent p-4 text-center">
-            <h3 className="font-display text-lg text-blakkout-primary">{displayName}</h3>
-            {displayPrice && <p className="font-mono text-blakkout-accent">{displayPrice}</p>}
+            <h3 className="font-display text-2xl md:text-3xl text-blakkout-primary">{displayName}</h3>
+            {displayPrice && <p className="font-mono text-lg md:text-xl text-blakkout-accent">{displayPrice}</p>}
+            
+            {/* Indicateur de statut du modèle */}
+            <div className="mt-2 flex items-center justify-center gap-2 text-xs font-mono opacity-60">
+              {preloadedModels.has(modelUrl) ? (
+                <>
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-green-400">MODÈLE 3D PRÊT</span>
+                </>
+              ) : isPreloading ? (
+                <>
+                  <div className="h-2 w-2 rounded-full bg-yellow-500 animate-spin"></div>
+                  <span className="text-yellow-400">PRÉCHARGEMENT...</span>
+                </>
+              ) : (
+                <>
+                  <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+                  <span className="text-blue-400">CHARGEMENT 3D</span>
+                </>
+              )}
+            </div>
           </div>
         </>
       )}

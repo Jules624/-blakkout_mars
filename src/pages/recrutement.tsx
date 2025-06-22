@@ -3,8 +3,7 @@ import { NextSeo } from 'next-seo';
 import { motion } from 'framer-motion';
 import { z } from 'zod';
 import Layout from '@/components/layout/Layout';
-import TVBlackout from '@/components/ui/TVBlackout';
-import TerminalInput from '@/components/ui/TerminalInput';
+import TVBlackout from '@/components/effects/TVBlackout';
 import { useEasterEggs } from '@/context/EasterEggContext';
 
 // Schéma de validation pour le formulaire
@@ -71,8 +70,7 @@ export default function Recrutement() {
   const [errors, setErrors] = useState<Partial<Record<keyof ApplicationForm, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [terminalMode, setTerminalMode] = useState(false);
-  
+
   const { activateEasterEgg, easterEggs } = useEasterEggs();
   
   // Filtrer les rôles visibles (sauf si l'easter egg est activé)
@@ -139,256 +137,225 @@ export default function Recrutement() {
       setIsSubmitting(false);
     }
   };
-  
-  // Commandes personnalisées pour le terminal
-  const availableCommands = [
-    {
-      command: 'roles',
-      description: 'Afficher les rôles disponibles',
-      action: () => {
-        return `Rôles disponibles:\n${visibleRoles.map(role => `- ${role.title}: ${role.description}`).join('\n')}`;
-      }
-    },
-    {
-      command: 'apply',
-      description: 'Postuler à un rôle spécifique',
-      action: (args: string[]) => {
-        const roleId = args[0];
-        const role = availableRoles.find(r => r.id === roleId);
-        if (!role) {
-          return `Rôle inconnu: ${roleId}\nUtilisez 'roles' pour voir les options disponibles.`;
-        }
-        setSelectedRole(roleId);
-        setTerminalMode(false);
-        return `Sélection du rôle: ${role.title}\nPassage en mode formulaire...`;
-      }
-    },
-    {
-      command: 'requirements',
-      description: 'Voir les prérequis d\'un rôle',
-      action: (args: string[]) => {
-        const roleId = args[0];
-        const role = availableRoles.find(r => r.id === roleId);
-        if (!role) {
-          return `Rôle inconnu: ${roleId}\nUtilisez 'roles' pour voir les options disponibles.`;
-        }
-        return `Prérequis pour ${role.title}:\n${role.requirements.map(req => `- ${req}`).join('\n')}`;
-      }
-    },
-    {
-      command: 'unlock',
-      description: 'Déverrouiller des rôles cachés',
-      action: (args: string[]) => {
-        const code = args.join(' ');
-        if (code === 'BLKKT-AGENT') {
-          activateEasterEgg('secretAgent');
-          return `Code accepté. Rôle secret débloqué: AGENT CRYPTIQUE`;
-        }
-        return `Code invalide. Accès refusé.`;
-      }
-    }
-  ];
-  
+
   return (
     <Layout>
       <NextSeo title="Recrutement" />
       
-      <TVBlackout initialDelay={1000} frequency={0.05} />
-      
-      <div className="circuit-bg py-20 pt-32">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="mb-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="mb-2 font-display text-4xl text-blakkout-primary">RECRUTEMENT</h1>
-            <div className="mx-auto h-1 w-24 bg-blakkout-primary"></div>
-            <p className="mt-4 font-mono text-blakkout-foreground">
-              Rejoignez le collectif @blakkout_mars et participez à la création d'expériences immersives.
-            </p>
-          </motion.div>
-          
-          {/* Bouton pour basculer entre formulaire et terminal */}
-          <div className="mb-8 text-center">
-            <button 
-              onClick={() => setTerminalMode(!terminalMode)}
-              className="hacker-button"
+      <TVBlackout initialDelay={1000} frequency={0.05}>
+        <div className="circuit-bg py-20 pt-32">
+          <div className="container mx-auto px-4">
+            <motion.div
+              className="mb-12 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              {terminalMode ? 'MODE FORMULAIRE' : 'MODE TERMINAL'}
-            </button>
-          </div>
-          
-          {terminalMode ? (
-            <div className="mx-auto max-w-3xl">
-              <TerminalInput 
-                initialMessage="Bienvenue dans l'interface de recrutement @blakkout_mars.\nUtilisez les commandes suivantes:\n- roles: Afficher les rôles disponibles\n- apply [role_id]: Postuler à un rôle spécifique\n- requirements [role_id]: Voir les prérequis d'un rôle\n- unlock [code]: Déverrouiller des rôles cachés"
-                availableCommands={availableCommands}
-              />
-            </div>
-          ) : (
-            <div className="mx-auto max-w-3xl">
-              {!selectedRole ? (
-                <motion.div 
-                  className="grid grid-cols-1 gap-6 md:grid-cols-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {visibleRoles.map((role, index) => (
-                    <motion.div
-                      key={role.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.1 * index }}
-                      className="cursor-pointer rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm transition-all hover:border-blakkout-accent hover:shadow-glow"
-                      onClick={() => setSelectedRole(role.id)}
-                    >
-                      <h3 className="mb-2 font-display text-xl text-blakkout-primary">{role.title}</h3>
-                      <p className="mb-4 font-mono text-sm text-blakkout-foreground">{role.description}</p>
+              <h1 className="mb-2 font-display text-4xl text-blakkout-primary">RECRUTEMENT</h1>
+              <div className="mx-auto h-1 w-24 bg-blakkout-primary"></div>
+              <p className="mt-4 font-mono text-blakkout-foreground">
+                Rejoignez l'aventure @blakkout_mars et participez à la création d'expériences immersives uniques.
+              </p>
+            </motion.div>
+
+            {/* Section Rôles disponibles */}
+            <section className="mb-12">
+              <motion.h2 
+                className="mb-8 font-display text-2xl text-blakkout-primary"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                RÔLES DISPONIBLES
+              </motion.h2>
+              
+              <div className="grid gap-6 md:grid-cols-2">
+                {visibleRoles.map((role, index) => (
+                  <motion.div
+                    key={role.id}
+                    className={`cursor-pointer rounded-md border p-6 backdrop-blur-sm transition-all duration-300 ${
+                      selectedRole === role.id
+                        ? 'border-blakkout-primary bg-blakkout-primary/20'
+                        : 'border-blakkout-primary/50 bg-blakkout-background/50 hover:border-blakkout-primary'
+                    }`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 * index }}
+                    onClick={() => setSelectedRole(role.id)}
+                  >
+                    <h3 className="mb-2 font-display text-lg text-blakkout-primary">{role.title}</h3>
+                    <p className="mb-4 text-sm text-blakkout-foreground">{role.description}</p>
+                    
+                    <div className="mb-4">
+                      <h4 className="mb-2 font-mono text-xs uppercase text-blakkout-primary">Prérequis :</h4>
                       <ul className="space-y-1">
-                        {role.requirements.map((req, i) => (
-                          <li key={i} className="font-mono text-xs text-blakkout-foreground/70">• {req}</li>
+                        {role.requirements.map((req, reqIndex) => (
+                          <li key={reqIndex} className="text-xs text-blakkout-foreground">
+                            • {req}
+                          </li>
                         ))}
                       </ul>
-                      <div className="mt-4 text-right">
-                        <span className="cryptic-link">POSTULER</span>
+                    </div>
+                    
+                    {role.isHidden && (
+                      <div className="rounded bg-blakkout-primary/20 p-2">
+                        <p className="font-mono text-xs text-blakkout-primary">🔓 Rôle secret débloqué !</p>
                       </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="mb-6 flex items-center justify-between">
-                    <h2 className="font-display text-2xl text-blakkout-primary">
-                      {availableRoles.find(r => r.id === selectedRole)?.title}
-                    </h2>
-                    <button 
-                      onClick={() => setSelectedRole(null)}
-                      className="font-mono text-sm text-blakkout-foreground hover:text-blakkout-primary"
-                    >
-                      RETOUR
-                    </button>
-                  </div>
-                  
-                  {isSuccess ? (
-                    <motion.div 
-                      className="rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 text-center backdrop-blur-sm"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="mb-4 text-4xl text-blakkout-primary">✓</div>
-                      <h3 className="mb-2 font-display text-xl text-blakkout-primary">CANDIDATURE ENVOYÉE</h3>
-                      <p className="font-mono text-blakkout-foreground">
-                        Votre candidature a été transmise à notre équipe. Nous vous contacterons prochainement.
-                      </p>
-                    </motion.div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6 rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm">
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Formulaire de candidature */}
+            {selectedRole && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="rounded-md border border-blakkout-primary bg-blakkout-background/50 p-6 backdrop-blur-sm"
+              >
+                <h2 className="mb-6 font-display text-2xl text-blakkout-primary">
+                  CANDIDATURE - {availableRoles.find(r => r.id === selectedRole)?.title}
+                </h2>
+                
+                {isSuccess ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center"
+                  >
+                    <div className="mb-4 text-4xl">✓</div>
+                    <h3 className="mb-2 font-display text-xl text-blakkout-primary">Candidature envoyée !</h3>
+                    <p className="font-mono text-blakkout-foreground">
+                      Nous examinerons votre candidature et vous recontacterons bientôt.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label htmlFor="name" className="mb-1 block font-mono text-sm text-blakkout-foreground">NOM / PSEUDONYME *</label>
+                        <label htmlFor="name" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                          Nom complet *
+                        </label>
                         <input
                           type="text"
                           id="name"
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                          className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                          placeholder="Votre nom"
                         />
-                        {errors.name && <p className="mt-1 font-mono text-xs text-blakkout-error">{errors.name}</p>}
+                        {errors.name && (
+                          <p className="mt-1 text-xs text-red-400">{errors.name}</p>
+                        )}
                       </div>
                       
                       <div>
-                        <label htmlFor="email" className="mb-1 block font-mono text-sm text-blakkout-foreground">EMAIL *</label>
+                        <label htmlFor="email" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                          Email *
+                        </label>
                         <input
                           type="email"
                           id="email"
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                          className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                          placeholder="votre@email.com"
                         />
-                        {errors.email && <p className="mt-1 font-mono text-xs text-blakkout-error">{errors.email}</p>}
+                        {errors.email && (
+                          <p className="mt-1 text-xs text-red-400">{errors.email}</p>
+                        )}
                       </div>
-                      
-                      <div>
-                        <label htmlFor="skills" className="mb-1 block font-mono text-sm text-blakkout-foreground">COMPÉTENCES *</label>
-                        <textarea
-                          id="skills"
-                          name="skills"
-                          value={formData.skills}
-                          onChange={handleChange}
-                          rows={3}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
-                          placeholder="Listez vos compétences pertinentes pour ce rôle"
-                        />
-                        {errors.skills && <p className="mt-1 font-mono text-xs text-blakkout-error">{errors.skills}</p>}
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="motivation" className="mb-1 block font-mono text-sm text-blakkout-foreground">MOTIVATION *</label>
-                        <textarea
-                          id="motivation"
-                          name="motivation"
-                          value={formData.motivation}
-                          onChange={handleChange}
-                          rows={5}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
-                          placeholder="Expliquez pourquoi vous souhaitez rejoindre @blakkout_mars"
-                        />
-                        {errors.motivation && <p className="mt-1 font-mono text-xs text-blakkout-error">{errors.motivation}</p>}
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="portfolio" className="mb-1 block font-mono text-sm text-blakkout-foreground">PORTFOLIO / LIENS</label>
-                        <input
-                          type="url"
-                          id="portfolio"
-                          name="portfolio"
-                          value={formData.portfolio}
-                          onChange={handleChange}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
-                          placeholder="https://votre-portfolio.com"
-                        />
-                        {errors.portfolio && <p className="mt-1 font-mono text-xs text-blakkout-error">{errors.portfolio}</p>}
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="secretCode" className="mb-1 block font-mono text-sm text-blakkout-foreground">CODE SECRET (optionnel)</label>
-                        <input
-                          type="text"
-                          id="secretCode"
-                          name="secretCode"
-                          value={formData.secretCode}
-                          onChange={handleChange}
-                          className="w-full rounded-md border border-blakkout-primary/30 bg-blakkout-muted p-2 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
-                          placeholder="Entrez un code secret si vous en possédez un"
-                        />
-                      </div>
-                      
-                      <div className="pt-4 text-right">
-                        <button 
-                          type="submit" 
-                          className="hacker-button"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? 'ENVOI EN COURS...' : 'ENVOYER CANDIDATURE'}
-                        </button>
-                      </div>
-                    </form>
-                  )}
-                </motion.div>
-              )}
-            </div>
-          )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="skills" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                        Compétences *
+                      </label>
+                      <textarea
+                        id="skills"
+                        name="skills"
+                        value={formData.skills}
+                        onChange={handleChange}
+                        rows={3}
+                        className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                        placeholder="Décrivez vos compétences techniques et artistiques..."
+                      />
+                      {errors.skills && (
+                        <p className="mt-1 text-xs text-red-400">{errors.skills}</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="motivation" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                        Motivation *
+                      </label>
+                      <textarea
+                        id="motivation"
+                        name="motivation"
+                        value={formData.motivation}
+                        onChange={handleChange}
+                        rows={4}
+                        className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                        placeholder="Pourquoi souhaitez-vous rejoindre @blakkout_mars ?"
+                      />
+                      {errors.motivation && (
+                        <p className="mt-1 text-xs text-red-400">{errors.motivation}</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="portfolio" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                        Portfolio (optionnel)
+                      </label>
+                      <input
+                        type="url"
+                        id="portfolio"
+                        name="portfolio"
+                        value={formData.portfolio}
+                        onChange={handleChange}
+                        className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                        placeholder="https://votre-portfolio.com"
+                      />
+                      {errors.portfolio && (
+                        <p className="mt-1 text-xs text-red-400">{errors.portfolio}</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="secretCode" className="mb-2 block font-mono text-sm text-blakkout-primary">
+                        Code secret (si vous en avez un)
+                      </label>
+                      <input
+                        type="text"
+                        id="secretCode"
+                        name="secretCode"
+                        value={formData.secretCode}
+                        onChange={handleChange}
+                        className="w-full rounded border border-blakkout-primary/50 bg-blakkout-background/50 p-3 font-mono text-blakkout-foreground focus:border-blakkout-primary focus:outline-none"
+                        placeholder="XXXX-XXXXX"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="hacker-button"
+                      >
+                        {isSubmitting ? 'ENVOI EN COURS...' : 'ENVOYER CANDIDATURE'}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </motion.section>
+            )}
+          </div>
         </div>
-      </div>
+      </TVBlackout>
     </Layout>
   );
 }

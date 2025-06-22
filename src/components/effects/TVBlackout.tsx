@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { randomDelay } from '@/lib/utils';
 
@@ -19,17 +19,18 @@ export default function TVBlackout({
   intensity = 'medium',
   disabled = false,
 }: TVBlackoutProps) {
-  const [isBlackout, setIsBlackout] = useState(false);
+  const [flickerState, setFlickerState] = useState<'normal' | 'flickering' | 'off'>('normal');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [currentOpacity, setCurrentOpacity] = useState(1);
 
   // Configurer l'intensité de l'effet
   const intensityConfig = {
-    low: { opacity: 0.7, blur: 1 },
-    medium: { opacity: 0.9, blur: 2 },
-    high: { opacity: 1, blur: 4 },
+    low: { maxFlickers: 3, offDuration: [100, 300] },
+    medium: { maxFlickers: 5, offDuration: [150, 500] },
+    high: { maxFlickers: 8, offDuration: [200, 800] },
   };
 
-  const { opacity, blur } = intensityConfig[intensity];
+  const { maxFlickers, offDuration } = intensityConfig[intensity];
 
   // Effet pour initialiser avec un délai
   useEffect(() => {
@@ -42,69 +43,119 @@ export default function TVBlackout({
     return () => clearTimeout(timer);
   }, [initialDelay, disabled]);
 
-  // Effet pour déclencher les blackouts aléatoires
+  // Effet pour déclencher les clignotements irréguliers
   useEffect(() => {
     if (!isInitialized || disabled) return;
 
-    // Fonction pour déclencher un blackout
-    const triggerBlackout = () => {
-      setIsBlackout(true);
+    // Fonction pour créer un clignotement irrégulier comme un néon défaillant
+    const triggerNeonFlicker = () => {
+      setFlickerState('flickering');
       
-      // Rétablir après la durée spécifiée
-      setTimeout(() => {
-        setIsBlackout(false);
-      }, duration);
+      // Nombre aléatoire de clignotements
+      const flickerCount = Math.floor(Math.random() * maxFlickers) + 2;
+      let currentFlicker = 0;
+      
+      const performFlicker = () => {
+        if (currentFlicker >= flickerCount) {
+          // Fin du clignotement, retour à la normale
+          setFlickerState('normal');
+          setCurrentOpacity(1);
+          return;
+        }
+        
+        // Clignotement irrégulier avec opacités variables
+        const flickerPattern = [
+          { opacity: 0, duration: Math.random() * 50 + 30 }, // Extinction rapide
+          { opacity: Math.random() * 0.3 + 0.1, duration: Math.random() * 40 + 20 }, // Faible lueur
+          { opacity: 0, duration: Math.random() * 80 + 40 }, // Extinction
+          { opacity: Math.random() * 0.6 + 0.4, duration: Math.random() * 60 + 30 }, // Rallumage partiel
+        ];
+        
+        let patternIndex = 0;
+        
+        const executePattern = () => {
+          if (patternIndex >= flickerPattern.length) {
+            currentFlicker++;
+            setTimeout(performFlicker, Math.random() * 100 + 50);
+            return;
+          }
+          
+          const step = flickerPattern[patternIndex];
+          setCurrentOpacity(step.opacity);
+          
+          setTimeout(() => {
+            patternIndex++;
+            executePattern();
+          }, step.duration);
+        };
+        
+        executePattern();
+      };
+      
+      performFlicker();
     };
 
-    // Programmer le prochain blackout
-    const scheduleNextBlackout = (): NodeJS.Timeout => {
-      const nextDelay = randomDelay(5000, 15000) / frequency;
+    // Programmer le prochain clignotement
+    const scheduleNextFlicker = (): NodeJS.Timeout => {
+      const nextDelay = randomDelay(24000, 75000) / frequency;
       return setTimeout(() => {
-        triggerBlackout();
-        timeoutRef.current = scheduleNextBlackout();
+        triggerNeonFlicker();
+        timeoutRef.current = scheduleNextFlicker();
       }, nextDelay);
     };
 
     // Référence pour pouvoir nettoyer le timeout
     const timeoutRef = { current: null as NodeJS.Timeout | null };
-    timeoutRef.current = scheduleNextBlackout();
+    timeoutRef.current = scheduleNextFlicker();
 
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [isInitialized, frequency, duration, disabled]);
-
-  // Variantes pour l'animation
-  const blackoutVariants = {
-    visible: { 
-      opacity: opacity,
-      filter: `blur(${blur}px)`,
-      transition: { duration: 0.1 }
-    },
-    hidden: { 
-      opacity: 0,
-      filter: 'blur(0px)',
-      transition: { duration: 0.2 }
-    }
-  };
+  }, [isInitialized, frequency, maxFlickers, disabled]);
 
   return (
-    <div className={`relative overflow-hidden tv-blackout ${isBlackout ? 'active' : ''}`}>
-      {children}
+    <div className={`relative overflow-hidden tv-blackout ${flickerState !== 'normal' ? 'flickering' : ''}`}>
+      <motion.div
+        animate={{ opacity: currentOpacity }}
+        transition={{ duration: 0.05, ease: "linear" }}
+        className="relative"
+      >
+        {children}
+      </motion.div>
       
+      {/* Overlay pour simuler l'effet néon défaillant */}
       <AnimatePresence>
-        {isBlackout && (
+        {flickerState === 'flickering' && currentOpacity < 0.8 && (
           <motion.div
-            className="absolute inset-0 z-50 bg-black"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={blackoutVariants}
+            className="absolute inset-0 z-10 bg-black pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 - currentOpacity }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.02, ease: "linear" }}
           />
         )}
       </AnimatePresence>
+      
+      {/* Effet de scintillement électrique */}
+      {flickerState === 'flickering' && (
+        <motion.div
+          className="absolute inset-0 z-5 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, rgba(0,255,0,${currentOpacity * 0.1}) 0%, transparent 70%)`,
+            filter: 'blur(1px)'
+          }}
+          animate={{
+            opacity: [0.3, 0.7, 0.2, 0.9, 0.1],
+          }}
+          transition={{
+            duration: 0.1,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      )}
     </div>
   );
 }

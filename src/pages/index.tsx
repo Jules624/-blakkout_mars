@@ -190,12 +190,17 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="mt-8 text-center"
+            className="fixed inset-0 flex flex-col items-center justify-center bg-black z-10"
           >
-            <h1 className="text-glitch font-display text-4xl text-blakkout-primary">
-              @BLAKKOUT_MARS
-            </h1>
-            <p className="mt-2 text-gray-400">Système opérationnel</p>
+            <div className="flex justify-center items-center">
+              <img 
+                src="/assets/images/logo.png" 
+                alt="BLAKKOUT_MARS" 
+                className="w-auto mx-auto filter" 
+                style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+              />
+            </div>
+            <p className="mt-4 text-gray-400">Système opérationnel</p>
           </motion.div>
         )}
       </div>
@@ -301,7 +306,12 @@ const TVShutdownAnimation: React.FC<{ onComplete: () => void }> = ({ onComplete 
               animate={{ y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              @BLAKKOUT_MARS
+              <img 
+                   src="/assets/images/logo.png" 
+                   alt="BLAKKOUT_MARS" 
+                   className="w-auto mx-auto filter" 
+                   style={{ height: '576px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+                 />
             </motion.h1>
             <motion.p
               className="mt-4 font-mono text-lg text-blakkout-foreground"
@@ -407,9 +417,14 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="mb-6 font-display text-5xl font-bold text-blakkout-primary sm:text-6xl md:text-7xl">
-                @BLAKKOUT<span className="text-blakkout-accent">_</span>MARS
-              </h1>
+              <div className="mb-6 flex justify-center">
+                <img 
+                  src="/assets/images/logo.png" 
+                  alt="BLAKKOUT_MARS" 
+                  className="w-auto mx-auto filter" 
+                  style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
+                />
+              </div>
               <p className="mb-8 font-mono text-lg text-blakkout-foreground text-center">
                 Collectif marseillais organisateur d'événements immersifs mêlant culture techno et univers geek.
               </p>

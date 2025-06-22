@@ -156,13 +156,50 @@ export function EasterEggProvider({ children }: EasterEggProviderProps) {
 
   // Charger les easter eggs depuis le localStorage au montage
   useEffect(() => {
-    const savedEasterEggs = localStorage.getItem('blakkout_easter_eggs');
-    if (savedEasterEggs) {
+    try {
+      // Force clear localStorage first to prevent any corruption issues
+      const allKeys = Object.keys(localStorage);
+      const problematicKeys = allKeys.filter(key => 
+        key.includes('blakkout') || 
+        key.includes('easter') ||
+        localStorage.getItem(key)?.includes('undefined') ||
+        localStorage.getItem(key)?.includes('null')
+      );
+      
+      problematicKeys.forEach(key => {
+        console.log('Removing potentially problematic key:', key);
+        localStorage.removeItem(key);
+      });
+      
+      const savedEasterEggs = localStorage.getItem('blakkout_easter_eggs');
+      console.log('DEBUG: savedEasterEggs after cleanup:', savedEasterEggs);
+      
+      if (savedEasterEggs && savedEasterEggs !== 'null' && savedEasterEggs !== 'undefined') {
+        const trimmed = savedEasterEggs.trim();
+        
+        // Extra validation
+        if (trimmed.length > 0 && 
+            (trimmed.startsWith('{') || trimmed.startsWith('[')) &&
+            (trimmed.endsWith('}') || trimmed.endsWith(']'))) {
+          
+          const parsed = JSON.parse(trimmed);
+          if (typeof parsed === 'object' && parsed !== null) {
+            console.log('DEBUG: Valid JSON parsed:', parsed);
+            setEasterEggs(prev => ({ ...prev, ...parsed }));
+          }
+        } else {
+          console.warn('Invalid format, removing:', trimmed);
+          localStorage.removeItem('blakkout_easter_eggs');
+        }
+      }
+    } catch (error) {
+      console.error('Critical error in EasterEgg context:', error);
+      // Nuclear option: clear all localStorage
       try {
-        const parsed = JSON.parse(savedEasterEggs);
-        setEasterEggs(prev => ({ ...prev, ...parsed }));
-      } catch (error) {
-        console.error('Erreur lors du chargement des easter eggs:', error);
+        localStorage.clear();
+        console.log('localStorage cleared due to critical error');
+      } catch (clearError) {
+        console.error('Failed to clear localStorage:', clearError);
       }
     }
   }, []);

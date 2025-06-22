@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear localStorage</title>
+</head>
+<body>
+    <h1>Clearing localStorage...</h1>
+    <script>
+        try {
+            // Clear the specific item that might be corrupted
+            localStorage.removeItem('blakkout_easter_eggs');
+            console.log('Cleared blakkout_easter_eggs from localStorage');
+            
+            // Also clear all localStorage for this domain
+            localStorage.clear();
+            console.log('Cleared all localStorage');
+            
+            document.body.innerHTML += '<p style="color: green;">✅ localStorage cleared successfully!</p>';
+            document.body.innerHTML += '<p>You can now close this tab and refresh your main application.</p>';
+        } catch (error) {
+            console.error('Error clearing localStorage:', error);
+            document.body.innerHTML += '<p style="color: red;">❌ Error clearing localStorage: ' + error.message + '</p>';
+        }
+    </script>
+</body>
+</html>

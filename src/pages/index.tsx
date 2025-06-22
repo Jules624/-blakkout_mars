@@ -554,12 +554,12 @@ export default function Home() {
           
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {merchItems.map((item) => (
-              <div key={item.id}>
+              <div key={item.id} className="h-96 cursor-pointer" onClick={() => router.push('/404?hack=true')}>
                 <RotatingMerch3D 
                   modelUrl={item.modelUrl}
                   productName={item.name}
-                  productPrice={item.price}
-                  onClick={() => window.location.href = `/merch/${item.id}`}
+                  price={item.price}
+                  autoRotate={true}
                   className="w-full h-full mx-auto"
                 />
               </div>

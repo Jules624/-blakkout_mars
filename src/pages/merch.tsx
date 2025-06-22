@@ -233,12 +233,13 @@ export default function Merch() {
                         key={`${product.id}-${activeCategory}`}
                         modelUrl={product.modelUrl}
                         productName={product.name}
+                        price={`${product.price}€`}
                         images={product.images}
                         scale={[1, 1, 1]}
                         position={[0, 0, 0]}
                         rotation={[0, 0, 0]}
                         backgroundColor="#0a0a0a"
-                        showControls={false}
+                        showControls={true}
                         autoRotate={true}
                         className="w-full h-full"
                       />

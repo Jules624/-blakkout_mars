@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 import Layout from '@/components/layout/Layout';
-import TVBlackout from '@/components/effects/TVBlackout';
+// import TVBlackout from '@/components/effects/TVBlackout'; // Removed to disable flickering effect
 import MarkdownReveal from '@/components/content/MarkdownReveal';
 
 // Types pour les membres du collectif
@@ -78,6 +78,18 @@ const members: Member[] = [
   },
   {
     id: 'member-005',
+    name: 'Hugo BURNET',
+    alias: 'JULES624',
+    role: 'dev',
+    bio: 'Développeur full-stack passionné par les technologies web modernes et l\'innovation numérique. Contributeur actif au projet @blakkout_mars, spécialisé dans React, Next.js, TypeScript et les expériences utilisateur immersives. Toujours à la recherche de nouveaux défis techniques.',
+    imageUrl: '/assets/images/team/dev2.jpg',
+    socialLinks: {
+      github: 'https://github.com/Jules624',
+      website: 'https://hugo-burnet.dev',
+    },
+  },
+  {
+    id: 'member-006',
     name: 'Julien Network',
     alias: 'NETRUNNER',
     role: 'comm',
@@ -142,11 +154,10 @@ const getRoleLabel = (role: MemberRole): string => {
 
 export default function Collectif() {
   return (
-    <Layout>
+    <Layout disableTVBlackout={true}>
       <NextSeo title="Le Collectif" />
       
-      <TVBlackout initialDelay={1000} frequency={0.05}>
-        <div className="circuit-bg py-20 pt-32">
+      <div className="circuit-bg py-20 pt-32">
           <div className="container mx-auto px-4">
             <motion.div
               className="mb-12 text-center"
@@ -304,7 +315,6 @@ export default function Collectif() {
             </section>
           </div>
         </div>
-      </TVBlackout>
     </Layout>
   );
 }

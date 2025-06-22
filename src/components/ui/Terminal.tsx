@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEasterEggs } from '@/context/EasterEggContext';
 import { cn } from '@/lib/utils';
@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 interface TerminalProps {
   isOpen: boolean;
   onClose: () => void;
+  className?: string;
 }
 
 interface TerminalLine {
@@ -15,7 +16,7 @@ interface TerminalLine {
   timestamp: Date;
 }
 
-export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
+export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose, className }) => {
   const [lines, setLines] = useState<TerminalLine[]>([
     {
       id: '1',
@@ -32,6 +33,7 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
   ]);
   const [currentInput, setCurrentInput] = useState('');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const lineIdCounter = useRef(3);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,8 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
       '  help - Affiche cette aide',
       '  clear - Efface le terminal',
       '  status - Affiche le statut du système',
+      '  date - Affiche la date',
+      '  whoami - Affiche l\'utilisateur actuel',
       '  scan - Recherche des anomalies',
       '  access - Tente un accès privilégié',
       '  matrix - Initialise la matrice',
@@ -122,6 +126,12 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         'Bienvenue dans le club secret.'
       ];
     },
+    date: () => [
+      '2024.01.01'
+    ],
+    whoami: () => [
+      'guest'
+    ],
     exit: () => {
       onClose();
       return ['Terminal fermé.'];
@@ -131,7 +141,7 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
   // Ajouter une ligne au terminal
   const addLine = (type: TerminalLine['type'], content: string) => {
     const newLine: TerminalLine = {
-      id: Date.now().toString(),
+      id: (lineIdCounter.current++).toString(),
       type,
       content,
       timestamp: new Date()
@@ -175,7 +185,10 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
 
   // Gérer les touches spéciales
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowUp') {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length > 0) {
         const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
@@ -226,7 +239,10 @@ export const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
-          className="w-full max-w-4xl h-96 mx-4 bg-black border border-green-500 rounded-lg overflow-hidden shadow-2xl"
+          className={cn(
+            "w-full max-w-4xl h-96 mx-4 bg-black border border-green-500 rounded-lg overflow-hidden shadow-2xl",
+            className
+          )}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}

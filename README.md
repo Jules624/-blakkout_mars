@@ -26,6 +26,8 @@ Le site propose une expérience interactive unique mêlant culture underground, 
 - **📱 Responsive** : Adaptation parfaite sur tous les appareils
 - **⚡ Performance** : Optimisations SSR et lazy loading
 - **🔍 SEO** : Métadonnées optimisées pour chaque page
+- **🎭 Effets Conditionnels** : Contrôle granulaire des effets visuels par page
+- **🔗 Intégrations Sociales** : Liens GitHub interactifs avec animations
 
 ## 🛠️ Stack Technique
 
@@ -40,7 +42,8 @@ Le site propose une expérience interactive unique mêlant culture underground, 
 ### 3D & Interactivité
 - **🎲 Three.js** : Moteur 3D pour les visualisations
 - **🔧 @react-three/fiber** : Intégration React pour Three.js
-- **🛠️ @react-three/drei** : Helpers et composants 3D
+- **🛠️ @react-three/drei** : Helpers et composants 3D (OrbitControls, useGLTF)
+- **🎮 Contrôles 3D** : Rotation manuelle, zoom, auto-rotation configurable
 
 ### Contenu & Validation
 - **📝 Markdown-it** : Rendu de contenu markdown enrichi
@@ -92,7 +95,7 @@ Le site sera accessible sur `http://localhost:3000`
 │   │   ├── seo-config.ts   # Configuration SEO
 │   │   └── utils.ts        # Utilitaires
 │   ├── pages/
-│   │   ├── collectif.tsx   # Page équipe et recrutement
+│   │   ├── collectif.tsx   # Page équipe et recrutement (sans effet TVBlackout)
 │   │   ├── contact.tsx     # Formulaire de contact
 │   │   ├── evenements.tsx  # Liste des événements
 │   │   ├── galerie.tsx     # Galerie média
@@ -112,11 +115,19 @@ Le site sera accessible sur `http://localhost:3000`
 
 ### Effets Visuels
 - **`<TVBlackout />`** : Effet de TV qui s'éteint/s'allume avec fréquence configurable
+  - **Contrôle conditionnel** : Prop `disabled` pour désactiver l'effet sur certaines pages
+  - **Configuration flexible** : `initialDelay`, `frequency`, `duration`, `intensity`
+  - **Gestion globale** : Intégré dans le Layout avec contrôle par page
 - **`<GlitchText />`** : Effet de texte glitché pour l'ambiance hacker
 - **`<CircuitBackground />`** : Arrière-plan animé de circuits électroniques
 
 ### 3D & Interactivité
-- **`<RotatingMerch3D />`** : Visualisation 3D rotative des produits merchandising
+- **`<RotatingMerch3D />`** : Visualisation 3D rotative des produits merchandising avec contrôles configurables
+  - **Props de transformation** : `scale`, `position`, `rotation` pour personnaliser l'affichage
+  - **Contrôles interactifs** : `showControls` pour activer/désactiver la rotation manuelle
+  - **Auto-rotation** : `autoRotate` pour la rotation automatique continue
+  - **Personnalisation visuelle** : `backgroundColor` et support multi-images
+  - **Optimisations** : Cache des modèles 3D et gestion des états de chargement
 - **`<Interactive3DScene />`** : Scènes 3D interactives pour l'immersion
 
 ### Contenu
@@ -127,6 +138,9 @@ Le site sera accessible sur `http://localhost:3000`
 ### Système
 - **`<EasterEggProvider />`** : Gestion globale des easter eggs et codes secrets
 - **`<Layout />`** : Layout principal avec navigation et footer
+  - **Props configurables** : `transparentNavbar`, `withoutFooter`, `disableTVBlackout`
+  - **Footer interactif** : Icône GitHub cliquable avec animations hover
+  - **Gestion des effets** : Contrôle conditionnel du TVBlackout par page
 
 ## 🔐 Easter Eggs & Fonctionnalités Cachées
 
@@ -211,6 +225,8 @@ colors: {
 - Suivre les conventions de nommage React/Next.js
 - Ajouter des commentaires pour les logiques complexes
 - Tester les composants sur mobile et desktop
+- Optimiser les performances 3D (cache des modèles, lazy loading)
+- Valider les props avec des valeurs par défaut appropriées
 
 ## 📱 Compatibilité
 
@@ -223,6 +239,14 @@ colors: {
 - Les animations 3D peuvent être ralenties sur les appareils moins puissants
 - Certains effets visuels nécessitent WebGL 2.0
 - Le mode sombre est optimisé pour l'expérience principale
+
+## 🎯 Améliorations Récentes
+
+### v1.2.0 - Gestion Conditionnelle des Effets
+- **TVBlackout conditionnel** : Désactivation de l'effet de clignotement sur la page collectif
+- **Footer amélioré** : Icône GitHub cliquable avec animations et tooltip
+- **Layout flexible** : Nouvelle prop `disableTVBlackout` pour contrôler les effets par page
+- **Optimisations UX** : Meilleure expérience utilisateur avec effets ciblés
 
 ## 📄 Licence
 

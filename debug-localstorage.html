@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug localStorage</title>
+</head>
+<body>
+    <h1>Debug localStorage</h1>
+    <div id="output"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message) {
+            output.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        // Examiner tout le localStorage
+        log('=== DEBUGGING LOCALSTORAGE ===');
+        log('localStorage length: ' + localStorage.length);
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            log('Key: ' + key);
+            log('Value: ' + JSON.stringify(value));
+            log('Value type: ' + typeof value);
+            log('Value length: ' + (value ? value.length : 'null'));
+            
+            if (value) {
+                log('First 50 chars: ' + value.substring(0, 50));
+                log('Last 50 chars: ' + value.substring(Math.max(0, value.length - 50)));
+                
+                // Tenter de parser si c'est blakkout_easter_eggs
+                if (key === 'blakkout_easter_eggs') {
+                    try {
+                        const parsed = JSON.parse(value);
+                        log('✅ JSON parse successful for ' + key);
+                        log('Parsed value: ' + JSON.stringify(parsed));
+                    } catch (error) {
+                        log('❌ JSON parse failed for ' + key + ': ' + error.message);
+                        log('Character codes of first 10 chars:');
+                        for (let j = 0; j < Math.min(10, value.length); j++) {
+                            log('  Char ' + j + ': "' + value.charAt(j) + '" (code: ' + value.charCodeAt(j) + ')');
+                        }
+                    }
+                }
+            }
+            log('---');
+        }
+        
+        // Nettoyer le localStorage problématique
+        log('\n=== CLEANING LOCALSTORAGE ===');
+        localStorage.removeItem('blakkout_easter_eggs');
+        log('Removed blakkout_easter_eggs from localStorage');
+        
+        // Vérifier après nettoyage
+        const afterClean = localStorage.getItem('blakkout_easter_eggs');
+        log('After cleaning - blakkout_easter_eggs: ' + afterClean);
+    </script>
+</body>
+</html>

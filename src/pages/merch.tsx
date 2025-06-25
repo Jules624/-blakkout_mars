@@ -145,7 +145,7 @@ export default function Merch() {
   }, 0);
   
   return (
-    <Layout disableTVBlackout={true}>
+    <Layout>
       <NextSeo title="Merchandising" />
       <ModelCacheProvider>
         <TVBlackout initialDelay={1000} frequency={0.05}>
@@ -233,7 +233,6 @@ export default function Merch() {
                         key={`${product.id}-${activeCategory}`}
                         modelUrl={product.modelUrl}
                         productName={product.name}
-                        price={`${product.price}€`}
                         images={product.images}
                         scale={[1, 1, 1]}
                         position={[0, 0, 0]}

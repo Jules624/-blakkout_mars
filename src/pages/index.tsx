@@ -196,8 +196,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               <img 
                 src="/assets/images/logo.png" 
                 alt="BLAKKOUT_MARS" 
-                className="w-auto mx-auto" 
-                style={{ height: '384px' }}
+                className="w-auto mx-auto filter" 
+                style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
               />
             </div>
             <p className="mt-4 text-gray-400">Système opérationnel</p>
@@ -309,8 +309,8 @@ const TVShutdownAnimation: React.FC<{ onComplete: () => void }> = ({ onComplete 
               <img 
                    src="/assets/images/logo.png" 
                    alt="BLAKKOUT_MARS" 
-                   className="w-auto mx-auto" 
-                   style={{ height: '576px' }}
+                   className="w-auto mx-auto filter" 
+                   style={{ height: '576px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
                  />
             </motion.h1>
             <motion.p
@@ -421,8 +421,8 @@ export default function Home() {
                 <img 
                   src="/assets/images/logo.png" 
                   alt="BLAKKOUT_MARS" 
-                  className="w-auto mx-auto" 
-                  style={{ height: '384px' }}
+                  className="w-auto mx-auto filter" 
+                  style={{ height: '384px', filter: 'brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)' }}
                 />
               </div>
               <p className="mb-8 font-mono text-lg text-blakkout-foreground text-center">
@@ -554,7 +554,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {merchItems.map((item) => (
-              <div key={item.id} className="h-96 cursor-pointer" onClick={() => router.push('/404?hack=true')}>
+              <div key={item.id} className="h-96">
                 <RotatingMerch3D 
                   modelUrl={item.modelUrl}
                   productName={item.name}

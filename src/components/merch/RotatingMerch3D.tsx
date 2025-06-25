@@ -122,9 +122,7 @@ const ModelCacheProvider: React.FC<ModelCacheProviderProps> = ({ children }) => 
       '/assets/models/tshirt.glb',
       '/assets/models/hoodie.glb',
       '/assets/models/cap.glb',
-      '/assets/models/jacket.glb',
-      '/assets/models/poster.glb',
-      '/assets/models/totebag.glb'
+      '/assets/models/mug.glb'
     ];
 
     const timeoutId = setTimeout(() => {
